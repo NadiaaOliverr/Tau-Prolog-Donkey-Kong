@@ -1,0 +1,43 @@
+.fundo{
+    background-color: #000;
+    color: #000000;
+}
+h1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 30px;
+}
+#integrantes{
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.tabuleiro {
+    width: 900px;
+    height: 75px;
+    border: 4px solid #810b3d;
+}
+.btn{
+    background: #13007c;
+
+    border-color: #13007c;;
+    margin-left: 20px;
+}
+.menu {
+    padding: 30px 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.position {
+    margin-top: 200px;
+    margin-right: -220px;
+    padding-left: 5px;
+}
