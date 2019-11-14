@@ -5,6 +5,14 @@
     margin-left: 10px;
 }
 
+.escada {
+    width: 30px;
+    height: 70px;
+    margin-right: -70px;
+    margin-left: 25px;
+    margin-top: -53px;
+}
+
 .fundo{
     background-color: #000;
     color: #000000;
