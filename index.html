@@ -4,43 +4,34 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Donkey Kong - SIN 323</title>
-	<link rel="stylesheet" href="style.css">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-	<link rel="shortcut icon" href="dk.png">
-
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="src/style.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<link rel="shortcut icon" href="img/icon.png">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-
 </head>
 
 <body class="fundo">
-	<h1><img src="Dk-Logo.png" alt="" width="300"></h1>
-	<!--Projeto de IA - SIN 323<br>-->
+	<h1><img src="img/logo.png" alt="" width="300"></h1>
 
 	<div class="menu">
-		<button type="button" class="btn btn-outline-light">Gerar Mapa</button>
+		<button id="generateMap" type="button" class="btn btn-outline-light">Gerar Mapa</button>
 		<button type="button" class="btn btn-outline-light">Gerar Caminho</button>
 		<button type="button" class="btn btn-outline-light" data-toggle="modal"
 			data-target="#myModal">Instruções</button>
-		<!-- The Modal -->
+
+		<!-- Modal -->
 		<div class="modal" id="myModal">
 			<div class="modal-dialog">
 				<div class="modal-content">
 
 					<!-- Modal Header -->
 					<div class="modal-header">
-						<h4 class="modal-title" style="color: #000">Instruções</h4>
+						<h4 class="modal-title">Instruções</h4>
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 
 					<!-- Modal body -->
-					<div class="modal-body" style="color: #000">
+					<div class="modal-body">
 						Siga os passos abaixo para ajudar o Mário a salvar a princesa: <br>
 						1 - Execute o programa xxx.pl dentro da pasta xxx <br>
 						2 - Agora é só clicar em gerar caminho e ver a mágica acontecer
@@ -58,16 +49,16 @@
 		</div>
 	</div>
 	<div class="container">
-		<div class="col-md-10">
+		<div id="container" class="col-md-10">
 			<table id="table">
-				<img class=" position rounded float-right" width="200" src="Macaco.png" alt="">
-
+				<img class=" position rounded float-right" width="200" src="img/monkey.png" alt="">
 			</table>
-			<p style="margin-top: 80px; justify-content: center; align-items: center; display: flex;">Desenvolvido por
-				Genilton e Nádia copyright © 2019</p>
+			<p id="footer">Desenvolvido por Genilton e Nádia copyright © 2019</p>
 		</div>
 	</div>
-	<script src="main.js"></script>
+
+	<script src="src/main.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 </body>
 
