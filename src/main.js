@@ -1,15 +1,17 @@
-const positionMario = { x: 4, y: 0 };
-const positionPrincess = { x: 0, y: 9 };
-const positionDonkey = { x: 0, y: 8 };
+const positionMario = { x: 0, y: 0 };
+const positionPrincess = { x: 4, y: 5 };
+const positionDonkey = { x: 4, y: 4 };
 
 let positionBarrel = [];
 let positionLadder = [];
 let positionHammer;
 
+let path;
+
 function drawScreen() {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 4; i >= 0; i--) {
         let row = document.createElement('tr');
-        for (let j = 0; j < 10; j++) {
+        for (let j = 0; j < 6; j++) {
             let column = document.createElement('td');
             column.setAttribute('id', `${i} ${j}`);
             column.setAttribute('class', 'tabuleiro');
@@ -21,11 +23,11 @@ function drawScreen() {
 
 function randomComponents() {
     //Escadas aleatorias
-    for (let i = 1; i < 5; i++) {
+    for (let i = 0; i < 4; i++) {
         let qtd = parseInt(1 + Math.random() * 2);
         for (let j = 0; j < qtd; j++) {
-            let column = parseInt(Math.random() * 10);
-            if ((i == 4 && column == 0) || positionLadder.find(item => JSON.stringify(item) === JSON.stringify({ x: i, y: column })) != undefined) {
+            let column = parseInt(Math.random() * 6);
+            if ((i == 0 && column == 0) || positionLadder.find(item => JSON.stringify(item) === JSON.stringify({ x: i, y: column })) != undefined) {
                 j--;
                 continue;
             }
@@ -33,13 +35,13 @@ function randomComponents() {
         }
     }
     //Barril aleatorias
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 3; i++) {
         let row = parseInt(Math.random() * 5);
-        let column = parseInt(Math.random() * 10);
+        let column = parseInt(Math.random() * 6);
 
-        if ((row == 4 && column == 0) ||
-            (row == 0 && column == 9) ||
-            (row == 0 && column == 8) ||
+        if ((row == 0 && column == 0) ||
+            (row == 4 && column == 5) ||
+            (row == 4 && column == 4) ||
             positionLadder.find(item => JSON.stringify(item) === JSON.stringify({ x: row, y: column })) != undefined ||
             positionBarrel.find(item => JSON.stringify(item) === JSON.stringify({ x: row, y: column })) != undefined
         ) {
@@ -51,10 +53,10 @@ function randomComponents() {
     //Martelo aleatorio    
     for (let i = 0; i < 1; i++) {
         let row = parseInt(Math.random() * 5);
-        let column = parseInt(Math.random() * 10);
-        if ((row == 4 && column == 0) ||
-            (row == 0 && column == 9) ||
-            (row == 0 && column == 8) ||
+        let column = parseInt(Math.random() * 6);
+        if ((row == 0 && column == 0) ||
+            (row == 4 && column == 5) ||
+            (row == 4 && column == 4) ||
             positionLadder.find(item => JSON.stringify(item) === JSON.stringify({ x: row, y: column })) != undefined ||
             positionBarrel.find(item => JSON.stringify(item) === JSON.stringify({ x: row, y: column })) != undefined
         ) {
@@ -65,17 +67,17 @@ function randomComponents() {
     }
 }
 
-function clear(){
+function clear() {
     positionBarrel = [];
     positionLadder = [];
-    
+
     document.getElementById('table').remove();
     let table = document.createElement('tr');
     table.setAttribute('id', 'table');
     document.getElementById('container').insertBefore(table, document.getElementById('footer'));
 }
 
-function generateMap() {    
+function generateMap() {
     clear();
     drawScreen();
     //Desenha Mario
@@ -122,5 +124,41 @@ function generateMap() {
     }
 }
 
+function convertLadder() {
+    return JSON.stringify(
+        positionLadder.map(function (item) {
+            return [item.x, item.y];
+        })
+    );
+}
+
+function run() {
+    let oldMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
+    oldMario.innerHTML = '';
+    positionMario.x = path.path.x;
+    positionMario.y = path.path.y;
+    let newMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
+    let img = document.createElement('img');
+    img.setAttribute('src', 'img/mario.png');
+    img.setAttribute('class', 'imgBox');
+    newMario.append(img);
+}
+
+function generatePath() {
+    var session = pl.create();
+    session.consult("prolog.pl");
+
+    session.query(`main([0,0], ${convertLadder()}, [4,5], Solucao).`);
+
+    var callback = function (response) {
+        let str = response.toString().replace('Solucao/', '"path":');
+        path = (JSON.parse(str)).path;
+    }
+    session.answer(callback);
+    path.path.reverse();
+    console.log(path);
+}
+
 generateMap();
 document.getElementById('generateMap').onclick = generateMap;
+document.getElementById('generatePath').onclick = generatePath;
