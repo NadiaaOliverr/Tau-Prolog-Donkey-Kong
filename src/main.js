@@ -24,7 +24,7 @@ function drawScreen() {
 function randomComponents() {
     //Escadas aleatorias
     for (let i = 0; i < 4; i++) {
-        let qtd = parseInt(1 + Math.random() * 2);
+        let qtd = 1;//parseInt(1 + Math.random() * 2);
         for (let j = 0; j < qtd; j++) {
             let column = parseInt(Math.random() * 6);
             if ((i == 0 && column == 0) || positionLadder.find(item => JSON.stringify(item) === JSON.stringify({ x: i, y: column })) != undefined) {
@@ -132,16 +132,21 @@ function convertLadder() {
     );
 }
 
-function run() {
+function run() {    
+    if(path.length == 0){
+        return;
+    }
     let oldMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
     oldMario.innerHTML = '';
-    positionMario.x = path.path.x;
-    positionMario.y = path.path.y;
+    positionMario.x = path[0][0];
+    positionMario.y = path[0][1];
+    console.log(path.shift(), positionMario);
     let newMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
     let img = document.createElement('img');
     img.setAttribute('src', 'img/mario.png');
     img.setAttribute('class', 'imgBox');
     newMario.append(img);
+    setTimeout(run, 500);
 }
 
 function generatePath() {
@@ -155,8 +160,9 @@ function generatePath() {
         path = (JSON.parse(str)).path;
     }
     session.answer(callback);
-    path.path.reverse();
+    path.reverse();
     console.log(path);
+    run();
 }
 
 generateMap();
