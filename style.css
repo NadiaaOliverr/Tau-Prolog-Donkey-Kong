@@ -1,12 +1,12 @@
 #footer {
-    margin-top: 15px; 
-    justify-content: center; 
-    align-items: center; 
-    display: flex; 
+    margin-top: 15px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
     color: #fff;
 }
 
-.imgBox{
+.imgBox {
     width: 50px;
     height: 70px;
     margin-right: -70px;
@@ -21,44 +21,51 @@
     margin-top: -53px;
 }
 
-.fundo{
+.fundo {
     background-color: #000;
     color: #000000;
 }
-h1{
+
+h1 {
     display: flex;
     justify-content: center;
     align-items: center;
     padding-top: 30px;
 }
-#integrantes{
+
+#integrantes {
     color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .tabuleiro {
     width: 900px;
     height: 75px;
     border: 2px solid #810b3d;
 }
-.btn{
-    background: #13007c;
 
-    border-color: #13007c;;
+.btn {
+    background: #13007c;
+    border-color: #13007c;
+    ;
     margin-left: 20px;
 }
+
 .menu {
     padding: 30px 30px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .position {
     margin-top: 200px;
     margin-right: -220px;
@@ -67,8 +74,20 @@ h1{
 
 .modal-title {
     color: #000";
+
 }
 
 .modal-body {
     color: #000";
+
+}
+
+#animate {
+    position: absolute;
+    width: 50px;
+    height: 70px;
+}
+
+#table {
+    position: relative;
 }
