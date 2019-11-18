@@ -16,7 +16,7 @@
   * 
   **/
 
- (function() {
+(function() {
 	
 	// VERSION
 	var version = { major: 0, minor: 2, patch: 79, status: "beta" };
@@ -6787,7 +6787,10 @@
 		window.pl = pl;
 	}
 	
-})();var pl;
+})();
+
+var pl;
+
 (function( pl ) {
 
 	var predicates = function() {

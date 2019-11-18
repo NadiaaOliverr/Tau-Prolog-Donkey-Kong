@@ -1,3 +1,6 @@
+import Draw from './draw'
+// import pl from './tau-prolog'
+
 const positionPrincess = { x: 4, y: 9 };
 const positionDonkey = { x: 4, y: 8 };
 
@@ -6,7 +9,6 @@ let positionBarrel = [];
 let positionLadder = [];
 let positionHammer;
 let path;
-
 
 function invalidPosition(x, y) {
     if ((x == positionMario.x && y == positionMario.y) ||
@@ -71,21 +73,21 @@ function clear() {
 
 function generateMap() {
     clear();
-    drawScreen();
+    Draw.drawScreen();
     //Desenha Mario
-    drawMario(positionMario);
+    Draw.drawMario(positionMario);
     //Desenha Peach
-    drawPrincess(positionPrincess);
+    Draw.drawPrincess(positionPrincess);
     //Desenha Donkey
-    drawDonkey(positionDonkey);
+    Draw.drawDonkey(positionDonkey);
     //Componentes aleatorios
     randomComponents();
     //Desenha martelo
-    drawHammer(positionHammer);
+    Draw.drawHammer(positionHammer);
     //Desenha escada
-    drawLadder(positionLadder);
+    Draw.drawLadder(positionLadder);
     //Desenha barril
-    drawBarrel(positionBarrel);
+    Draw.drawBarrel(positionBarrel);
 }
 
 function convertLadder() {
@@ -130,7 +132,7 @@ function generatePath() {
     var session = pl.create();
     session.consult("prolog.pl");
 
-    session.query(`main([0,0], ${convertLadder()}, [4,9], Solucao).`);
+    session.query(`main([0,0], ${convertLadder()}, [${positionHammer.x},${positionHammer.y}],[4,9], Solucao).`);
 
     var callback = function(response) {
         let str = response.toString().replace('Solucao/', '"path":');

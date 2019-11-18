@@ -8,8 +8,7 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 	<link rel="shortcut icon" href="img/icon.png">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-	<script src="tau-prolog.js"></script>
-	<script src="draw.js"></script>
+	<script src="../src/tau-prolog.js"></script>
 </head>
 
 <body class="fundo">
@@ -58,17 +57,17 @@
 		</div>
 	</div>
 
-	<script id="prolog.pl" type="text/prolog">
+	<script id="prolog.pl" type="text/prolog" src="prolog.pl">
 		:-use_module(library(lists)). 
 		
 		sucessao([X,Y], _, [X,Yout]):- Y<9, Yout is Y + 1. 
 		sucessao([X,Y], _, [X,Yout]):- Y>0, Yout is Y - 1. 
 		sucessao([X,Y], Escadas, [Xout,Y]):- member( [X,Y], Escadas), X>0, Xout is X - 1. 
 		sucessao([X,Y], Escadas, [Xout,Y]):- member( [X,Y], Escadas), X<4, Xout is X + 1. 
-		
+
 		solucao_bl(Inicial, Escadas, Meta, Solucao) :- bl([[Inicial]], Escadas, Meta, Solucao). 		
 		bl([[Estado|Caminho]|_], _, Meta, [Estado|Caminho]) :- Meta==Estado. 
-		
+
 		bl([Primeiro|Outros], Escadas, Meta, Solucao) :- 
 			estende(Primeiro, Sucessores, Escadas), append(Outros, Sucessores, NovaFronteira), 
 			bl(NovaFronteira, Escadas, Meta, Solucao).
@@ -79,11 +78,16 @@
 					\+( member(Sucessor,[Estado|Caminho]) )), 
 					ListaSucessores ), !. estende( _ ,[], _).
 
-		main(EstadoInicial, Escadas, Meta, Solucao) :- solucao_bl(EstadoInicial, Escadas, Meta, Solucao). 
+		main(EstadoInicial, Escadas, Martelo, Meta, Solucao) :- 
+			solucao_bl(EstadoInicial, Escadas, Martelo, CaminhoMartelo),
+			solucao_bl(Martelo, Escadas, Meta, CaminhoMeta),
+			append( CaminhoMeta, CaminhoMartelo, Solucao).
+			
+
 	</script>
 
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-	<script src="main.js"></script>
+	<script id="main" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="bundle.js"></script>
 </body>
 
 </html>
