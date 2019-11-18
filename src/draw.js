@@ -23,7 +23,7 @@ export default class {
     static drawPrincess(positionPrincess) {
         let box = document.getElementById(`${positionPrincess.x} ${positionPrincess.y}`);
         let img = document.createElement('img');
-        img.setAttribute('src', 'img/peach.png');
+        img.setAttribute('src', 'img/peach.gif');
         img.setAttribute('class', 'imgBox');
         box.append(img);
     }
@@ -31,7 +31,7 @@ export default class {
     static drawDonkey(positionDonkey) {
         let box = document.getElementById(`${positionDonkey.x} ${positionDonkey.y}`);
         let img = document.createElement('img');
-        img.setAttribute('src', 'img/donkey_kong.png');
+        img.setAttribute('src', 'img/donkey_kong.webp');
         img.setAttribute('class', 'imgBox');
         box.append(img);
     }

@@ -4,6 +4,12 @@
     align-items: center;
     display: flex;
     color: #fff;
+    position: absolute;
+    bottom: 0;
+}
+
+tr{
+    border: 2px solid #810b3d;
 }
 
 .imgBox {
@@ -19,6 +25,7 @@
     margin-right: -70px;
     margin-left: 25px;
     margin-top: -53px;
+    margin-bottom: 53px;
 }
 
 .fundo {
@@ -60,9 +67,13 @@ h1 {
     align-items: center;
 }
 
+.col-md-10{
+    position: relative;
+}
+
 .container {
     display: flex;
-    justify-content: center;
+    justify-content: center;    
     align-items: center;
 }
 
@@ -82,12 +93,18 @@ h1 {
 
 }
 
-#animate {
+.animate {
     position: absolute;
+    margin-top: 15px;
     width: 50px;
-    height: 70px;
+    height: 70px;    
 }
 
-#table {
-    position: relative;
+#edge{
+    margin: 0px;   
+    position: relative; 
+}
+
+.table{
+    position: absolute;
 }

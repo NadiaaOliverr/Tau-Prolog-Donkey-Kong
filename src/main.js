@@ -1,5 +1,4 @@
 import Draw from './draw'
-// import pl from './tau-prolog'
 
 const positionPrincess = { x: 4, y: 9 };
 const positionDonkey = { x: 4, y: 8 };
@@ -16,7 +15,8 @@ function invalidPosition(x, y) {
         (x == positionDonkey.x && y == positionDonkey.y) ||
         (x == positionPrincess.x - 1 && y == positionPrincess.y) ||
         positionLadder.find(item => JSON.stringify(item) === JSON.stringify({ x: x, y: y })) != undefined ||
-        positionBarrel.find(item => JSON.stringify(item) === JSON.stringify({ x: x, y: y })) != undefined) {
+        positionBarrel.find(item => JSON.stringify(item) === JSON.stringify({ x: x, y: y })) != undefined) 
+    {
         return true;
     }
     return false;
@@ -60,19 +60,7 @@ function randomComponents() {
     }
 }
 
-function clear() {
-    positionBarrel = [];
-    positionLadder = [];
-    positionMario = { x: 0, y: 0 };
-
-    document.getElementById('table').remove();
-    let table = document.createElement('tr');
-    table.setAttribute('id', 'table');
-    document.getElementById('container').insertBefore(table, document.getElementById('footer'));
-}
-
 function generateMap() {
-    clear();
     Draw.drawScreen();
     //Desenha Mario
     Draw.drawMario(positionMario);
@@ -88,6 +76,7 @@ function generateMap() {
     Draw.drawLadder(positionLadder);
     //Desenha barril
     Draw.drawBarrel(positionBarrel);
+    teste();
 }
 
 function convertLadder() {
@@ -98,31 +87,19 @@ function convertLadder() {
     );
 }
 
-function equalPosition(position1, position2) {
-    return (position1.x == position2.x) && (position1.y == position2.y);
-}
-
 function run() {
     if (path.length == 0) {
         return;
     }
-    if (equalPosition(positionMario, positionLadder)) {
-        let oldMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
-        oldMario.innerHTML = '';
-        img = document.createElement('img');
-        img.setAttribute('src', 'img/ladder.png');
-        img.setAttribute('class', 'ladder');
-        oldMario.append(img);
-    } else {
-        let oldMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
-        oldMario.innerHTML = '';
-    }
+    
+    let oldMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
+    oldMario.innerHTML = '';
     positionMario.x = path[0][0];
     positionMario.y = path[0][1];
-    console.log(path.shift(), positionMario);
+    console.log(path.shift(), positionMario);    
     let newMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
     let img = document.createElement('img');
-    img.setAttribute('src', 'img/mario.png');
+    img.setAttribute('src', 'img/mario.gif');
     img.setAttribute('class', 'imgBox');
     newMario.append(img);
     setTimeout(run, 500);
@@ -144,6 +121,17 @@ function generatePath() {
     run();
 }
 
+function teste(){
+    let edge = document.getElementById('edge');
+    let animate = document.createElement('div');
+    let img = document.createElement('img');
+    img.setAttribute('src','img/marioRunner.gif');
+    img.setAttribute('class','imgBox');
+    animate.setAttribute('class','animate');
+    animate.append(img);
+    edge.append(animate);
+}
+
 generateMap();
-document.getElementById('generateMap').onclick = generateMap;
+document.getElementById('generateMap').onclick = () => location.reload();
 document.getElementById('generatePath').onclick = generatePath;
