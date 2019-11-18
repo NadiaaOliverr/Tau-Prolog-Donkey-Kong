@@ -77,6 +77,8 @@ function generateMap() {
     //Desenha barril
     Draw.drawBarrel(positionBarrel);
     teste();
+    
+    
 }
 
 function convertLadder() {
@@ -99,13 +101,14 @@ function run() {
     console.log(path.shift(), positionMario);    
     let newMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
     let img = document.createElement('img');
-    img.setAttribute('src', 'img/mario.gif');
+    img.setAttribute('src', 'img/marioRunner.gif');
     img.setAttribute('class', 'imgBox');
     newMario.append(img);
     setTimeout(run, 500);
 }
 
 function generatePath() {
+    document.querySelector('audio').play();
     var session = pl.create();
     session.consult("prolog.pl");
 
@@ -125,7 +128,7 @@ function teste(){
     let edge = document.getElementById('edge');
     let animate = document.createElement('div');
     let img = document.createElement('img');
-    img.setAttribute('src','img/marioRunner.gif');
+    img.setAttribute('src','img/marioHammer.gif');
     img.setAttribute('class','imgBox');
     animate.setAttribute('class','animate');
     animate.append(img);
@@ -133,5 +136,6 @@ function teste(){
 }
 
 generateMap();
+
 document.getElementById('generateMap').onclick = () => location.reload();
 document.getElementById('generatePath').onclick = generatePath;
