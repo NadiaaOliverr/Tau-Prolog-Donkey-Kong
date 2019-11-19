@@ -4,8 +4,9 @@ import Random from './random';
 let positionPrincess = { x: 4, y: 9 };
 let positionDonkey = { x: 4, y: 8 };
 let positionMario = { x: 0, y: 0 };
+let positionAnimate = { x: 0, y: 399 };
+let srcMario = 'mario';
 let path;
-let positionAnimate = { x: 0, y: 15 };
 
 //Componentes aleatorios        
 let {
@@ -28,7 +29,6 @@ function generateMap() {
     Draw.drawLadder(positionLadder);
     //Desenha barril
     Draw.drawBarrel(positionBarrel);
-    teste();
 }
 
 function convertLadder() {
@@ -39,26 +39,103 @@ function convertLadder() {
     );
 }
 
-function run() {
+function isBarrel([x, y]) {
+    if (positionBarrel.find(element => (element.x == x && element.y == y)) == undefined) {
+        return false;
+    }
+
+    return true;
+}
+
+function direction(step1, step2) {
+    let x = step2[0] - step1[0];
+    let y = step2[1] - step1[1];
+
+    if (x != 0) {
+        if (x == 1) {
+            return 'up';
+        }
+        if (x == -1) {
+            return 'down';
+        }
+    }
+
+    if (y != 0) {
+        if (y == 1) {
+            return 'right';
+        }
+        if (y == -1) {
+            return 'left';
+        }
+    }
+
+    if (x == 0 && y == 0) {
+        return 'hammer';
+    }
+}
+
+async function run() {
     if (path.length == 0) {
         return;
     }
+    let edge = document.getElementById('edge');
+    let animate = document.createElement('div');
+    let img = document.createElement('img');
+    img.setAttribute('src', 'img/marioRight.gif');
+    img.setAttribute('class', 'imgBox');
+    animate.setAttribute('class', 'animate');
+    animate.append(img);
+    edge.append(animate);
 
     let oldMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
     oldMario.innerHTML = '';
-    positionMario.x = path[0][0];
-    positionMario.y = path[0][1];
-    console.log(path.shift(), positionMario);
-    let newMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
-    let img = document.createElement('img');
-    img.setAttribute('src', 'img/marioRunner.gif');
-    img.setAttribute('class', 'imgBox');
-    newMario.append(img);
-    setTimeout(run, 500);
+
+    for (let i = 0; i < (path.length - 1); i++) {
+        switch (direction(path[i], path[i + 1])) {
+            case 'up':
+                await moveUp();
+                break;
+            case 'down':
+                await moveDown();
+                break;
+            case 'left':
+                if (isBarrel(path[i + 1])) {
+                    await jumpLeft();
+                    i++;                    
+                }else{
+                    await moveLeft();
+                }                
+                break;
+            case 'right':
+                if (isBarrel(path[i + 1])) {
+                    await jumpRight();
+                    i++;
+                }else{
+                    await moveRiht();
+                }                
+                break;
+            case 'hammer':
+                srcMario = 'marioHammer';
+                let oldHammer = document.getElementById(`${positionHammer.x} ${positionHammer.y}`);
+                oldHammer.innerHTML = '';
+                break;
+            default:
+
+                break;
+        }
+    }
+
+    let oldPricess = document.getElementById(`${positionPrincess.x} ${positionPrincess.y}`);
+    oldPricess.children[0].setAttribute('src', 'img/win.png');
+    let oldDonkey = document.getElementById(`${positionDonkey.x} ${positionDonkey.y}`);
+    oldDonkey.children[0].setAttribute('src', 'img/donkey_sleep.png');
+    animate.remove();
+    positionAnimate.x = 0;
+    positionAnimate.y = 399;
 }
 
 function generatePath() {
-    document.querySelector('audio').play();
+    document.getElementById('start').play();
     var session = pl.create();
     session.consult("prolog.pl");
 
@@ -70,7 +147,6 @@ function generatePath() {
     }
     session.answer(callback);
     path.reverse();
-    console.log(path);
     run();
 }
 
@@ -84,80 +160,122 @@ async function teste() {
     animate.append(img);
     edge.append(animate);
 
-    let response = await moveRiht();
-    console.log(response);
-    response = await moveDown();
-    console.log(response);
-    response = await moveLeft();
-    console.log(response);
-    response = await moveUp();
-    console.log(response);
+    await jumpRight();
 }
 
-const  moveRiht = () => new Promise( (resolve, reject) => {
+const moveRiht = () => new Promise((resolve, reject) => {
     let animate = document.getElementsByClassName('animate')[0];
-    animate.children[0].setAttribute('src', 'img/marioRight.gif');
+    animate.children[0].setAttribute('src', `img/${srcMario}Right.gif`);
     let max = positionAnimate.x + 90;
-    let id = setInterval( frame, 5);
-    function frame(){
-        if( positionAnimate.x == max){
+    let id = setInterval(frame, 5);
+    function frame() {
+        if (positionAnimate.x == max) {
             clearInterval(id);
             resolve('Ok');
-        }else{
+        } else {
             animate.style.marginLeft = positionAnimate.x + "px";
-            positionAnimate.x++;            
+            positionAnimate.x++;
         }
     }
 });
 
-const  moveLeft = () => new Promise( (resolve, reject) => {
+const moveLeft = () => new Promise((resolve, reject) => {
     let animate = document.getElementsByClassName('animate')[0];
-    animate.children[0].setAttribute('src', 'img/marioLeft.gif');
+    animate.children[0].setAttribute('src', `img/${srcMario}Left.gif`);
     let max = positionAnimate.x - 90;
-    let id = setInterval( frame, 5);
-    function frame(){
-        if( positionAnimate.x == max){
+    let id = setInterval(frame, 5);
+    function frame() {
+        if (positionAnimate.x == max) {
             clearInterval(id);
             resolve('Ok');
-        }else{
+        } else {
             animate.style.marginLeft = positionAnimate.x + "px";
-            positionAnimate.x--;            
+            positionAnimate.x--;
         }
     }
 });
 
-const  moveDown = () => new Promise( (resolve, reject) => {
+const moveDown = () => new Promise((resolve, reject) => {
     let animate = document.getElementsByClassName('animate')[0];
     let max = positionAnimate.y + 96;
-    let id = setInterval( frame, 5);
-    function frame(){
-        if( positionAnimate.y == max){
+    let id = setInterval(frame, 5);
+    function frame() {
+        if (positionAnimate.y == max) {
             clearInterval(id);
             resolve('Ok');
-        }else{
+        } else {
             animate.style.marginTop = positionAnimate.y + "px";
-            positionAnimate.y++;            
+            positionAnimate.y++;
         }
     }
 });
 
-const  moveUp = () => new Promise( (resolve, reject) => {
+const moveUp = () => new Promise((resolve, reject) => {
     let animate = document.getElementsByClassName('animate')[0];
-    let max = positionAnimate.y - 90;
-    let id = setInterval( frame, 5);
-    function frame(){
-        if( positionAnimate.y == max){
+    let max = positionAnimate.y - 96;
+    let id = setInterval(frame, 5);
+    function frame() {
+        if (positionAnimate.y == max) {
             clearInterval(id);
             resolve('Ok');
-        }else{
+        } else {
             animate.style.marginTop = positionAnimate.y + "px";
-            positionAnimate.y--;            
+            positionAnimate.y--;
         }
     }
 });
 
-// function moveRiht(animate, times = 1){
-// }
+const jumpRight = () => new Promise((resolve, reject) => {
+    document.getElementById('jump').play();
+    let animate = document.getElementsByClassName('animate')[0];
+    animate.children[0].setAttribute('src', `img/${srcMario}Right.gif`);
+    let max = positionAnimate.x + 180;
+    let aux = 0;
+    let id = setInterval(frame, 5);
+    function frame() {
+        if (positionAnimate.x == max) {
+            clearInterval(id);
+            resolve('Ok');
+        } else {
+            animate.style.marginLeft = positionAnimate.x + "px";
+            animate.style.marginTop = positionAnimate.y + "px";
+            positionAnimate.x++;
+            aux++;
+            if (aux <= 90) {
+                positionAnimate.y--;
+            }
+            else{
+                positionAnimate.y++;
+            }
+        }
+    }
+});
+
+const jumpLeft = () => new Promise((resolve, reject) => {
+    document.getElementById('jump').play();
+    let animate = document.getElementsByClassName('animate')[0];
+    animate.children[0].setAttribute('src', `img/${srcMario}Left.gif`);
+    let max = positionAnimate.x - 180;
+    let aux = 0;
+    let id = setInterval(frame, 5);
+    function frame() {
+        if (positionAnimate.x == max) {
+            clearInterval(id);
+            resolve('Ok');
+        } else {
+            animate.style.marginLeft = positionAnimate.x + "px";
+            animate.style.marginTop = positionAnimate.y + "px";
+            positionAnimate.x--;
+            aux++;
+            if (aux <= 90) {
+                positionAnimate.y--;
+            }
+            else{
+                positionAnimate.y++;
+            }
+        }
+    }
+});
 
 document.getElementById('generateMap').onclick = () => location.reload();
 document.getElementById('generatePath').onclick = generatePath;
