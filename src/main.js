@@ -1,64 +1,18 @@
-import Draw from './draw'
+import Draw from './draw';
+import Random from './random';
 
-const positionPrincess = { x: 4, y: 9 };
-const positionDonkey = { x: 4, y: 8 };
-
+let positionPrincess = { x: 4, y: 9 };
+let positionDonkey = { x: 4, y: 8 };
 let positionMario = { x: 0, y: 0 };
-let positionBarrel = [];
-let positionLadder = [];
-let positionHammer;
 let path;
+let positionAnimate = { x: 0, y: 15 };
 
-function invalidPosition(x, y) {
-    if ((x == positionMario.x && y == positionMario.y) ||
-        (x == positionPrincess.x && y == positionPrincess.y) ||
-        (x == positionDonkey.x && y == positionDonkey.y) ||
-        (x == positionPrincess.x - 1 && y == positionPrincess.y) ||
-        positionLadder.find(item => JSON.stringify(item) === JSON.stringify({ x: x, y: y })) != undefined ||
-        positionBarrel.find(item => JSON.stringify(item) === JSON.stringify({ x: x, y: y })) != undefined) 
-    {
-        return true;
-    }
-    return false;
-}
-
-function randomComponents() {
-    //Escadas aleatorias
-    for (let i = 0; i < 4; i++) {
-        let qtd = parseInt(1 + Math.random() * 2);
-        for (let j = 0; j < qtd; j++) {
-            let column = parseInt(Math.random() * 10);
-            if (invalidPosition(i, column)) {
-                j--;
-                continue;
-            }
-            positionLadder[positionLadder.length] = { x: i, y: column };
-        }
-    }
-
-    //Barril aleatorias
-    for (let i = 0; i < 4; i++) {
-        let row = parseInt(Math.random() * 5);
-        let column = parseInt(Math.random() * 10);
-
-        if (invalidPosition(row, column)) {
-            i--;
-            continue;
-        }
-        positionBarrel[positionBarrel.length] = { x: row, y: column };
-    }
-
-    //Martelo aleatorio    
-    for (let i = 0; i < 1; i++) {
-        let row = parseInt(Math.random() * 5);
-        let column = parseInt(Math.random() * 10);
-        if (invalidPosition(row, column)) {
-            i--;
-            continue;
-        }
-        positionHammer = { x: row, y: column };
-    }
-}
+//Componentes aleatorios        
+let {
+    positionBarrel,
+    positionLadder,
+    positionHammer
+} = new Random(positionMario, positionPrincess, positionDonkey).randomComponents();
 
 function generateMap() {
     Draw.drawScreen();
@@ -68,8 +22,6 @@ function generateMap() {
     Draw.drawPrincess(positionPrincess);
     //Desenha Donkey
     Draw.drawDonkey(positionDonkey);
-    //Componentes aleatorios
-    randomComponents();
     //Desenha martelo
     Draw.drawHammer(positionHammer);
     //Desenha escada
@@ -77,13 +29,11 @@ function generateMap() {
     //Desenha barril
     Draw.drawBarrel(positionBarrel);
     teste();
-    
-    
 }
 
 function convertLadder() {
     return JSON.stringify(
-        positionLadder.map(function(item) {
+        positionLadder.map(function (item) {
             return [item.x, item.y];
         })
     );
@@ -93,12 +43,12 @@ function run() {
     if (path.length == 0) {
         return;
     }
-    
+
     let oldMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
     oldMario.innerHTML = '';
     positionMario.x = path[0][0];
     positionMario.y = path[0][1];
-    console.log(path.shift(), positionMario);    
+    console.log(path.shift(), positionMario);
     let newMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
     let img = document.createElement('img');
     img.setAttribute('src', 'img/marioRunner.gif');
@@ -114,7 +64,7 @@ function generatePath() {
 
     session.query(`main([0,0], ${convertLadder()}, [${positionHammer.x},${positionHammer.y}],[4,9], Solucao).`);
 
-    var callback = function(response) {
+    var callback = function (response) {
         let str = response.toString().replace('Solucao/', '"path":');
         path = (JSON.parse(str)).path;
     }
@@ -124,18 +74,91 @@ function generatePath() {
     run();
 }
 
-function teste(){
+async function teste() {
     let edge = document.getElementById('edge');
     let animate = document.createElement('div');
     let img = document.createElement('img');
-    img.setAttribute('src','img/marioHammer.gif');
-    img.setAttribute('class','imgBox');
-    animate.setAttribute('class','animate');
+    img.setAttribute('src', 'img/marioRight.gif');
+    img.setAttribute('class', 'imgBox');
+    animate.setAttribute('class', 'animate');
     animate.append(img);
     edge.append(animate);
+
+    let response = await moveRiht();
+    console.log(response);
+    response = await moveDown();
+    console.log(response);
+    response = await moveLeft();
+    console.log(response);
+    response = await moveUp();
+    console.log(response);
 }
 
-generateMap();
+const  moveRiht = () => new Promise( (resolve, reject) => {
+    let animate = document.getElementsByClassName('animate')[0];
+    animate.children[0].setAttribute('src', 'img/marioRight.gif');
+    let max = positionAnimate.x + 90;
+    let id = setInterval( frame, 5);
+    function frame(){
+        if( positionAnimate.x == max){
+            clearInterval(id);
+            resolve('Ok');
+        }else{
+            animate.style.marginLeft = positionAnimate.x + "px";
+            positionAnimate.x++;            
+        }
+    }
+});
+
+const  moveLeft = () => new Promise( (resolve, reject) => {
+    let animate = document.getElementsByClassName('animate')[0];
+    animate.children[0].setAttribute('src', 'img/marioLeft.gif');
+    let max = positionAnimate.x - 90;
+    let id = setInterval( frame, 5);
+    function frame(){
+        if( positionAnimate.x == max){
+            clearInterval(id);
+            resolve('Ok');
+        }else{
+            animate.style.marginLeft = positionAnimate.x + "px";
+            positionAnimate.x--;            
+        }
+    }
+});
+
+const  moveDown = () => new Promise( (resolve, reject) => {
+    let animate = document.getElementsByClassName('animate')[0];
+    let max = positionAnimate.y + 96;
+    let id = setInterval( frame, 5);
+    function frame(){
+        if( positionAnimate.y == max){
+            clearInterval(id);
+            resolve('Ok');
+        }else{
+            animate.style.marginTop = positionAnimate.y + "px";
+            positionAnimate.y++;            
+        }
+    }
+});
+
+const  moveUp = () => new Promise( (resolve, reject) => {
+    let animate = document.getElementsByClassName('animate')[0];
+    let max = positionAnimate.y - 90;
+    let id = setInterval( frame, 5);
+    function frame(){
+        if( positionAnimate.y == max){
+            clearInterval(id);
+            resolve('Ok');
+        }else{
+            animate.style.marginTop = positionAnimate.y + "px";
+            positionAnimate.y--;            
+        }
+    }
+});
+
+// function moveRiht(animate, times = 1){
+// }
 
 document.getElementById('generateMap').onclick = () => location.reload();
 document.getElementById('generatePath').onclick = generatePath;
+generateMap();
