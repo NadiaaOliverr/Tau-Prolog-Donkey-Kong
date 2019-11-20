@@ -31,6 +31,21 @@ function generateMap() {
     Draw.drawBarrel(positionBarrel);
 }
 
+function backPath() {
+
+    let Pricess = document.getElementById(`${positionPrincess.x} ${positionPrincess.y}`);
+    Pricess.children[0].setAttribute('src', 'img/peach.gif');
+    let Donkey = document.getElementById(`${positionDonkey.x} ${positionDonkey.y}`);
+    Donkey.children[0].setAttribute('src', 'img/donkey_kong.webp');
+    //Desenha Mário
+    Draw.drawMario(positionMario);
+    //Desenha martelo
+    Draw.drawHammer(positionHammer);
+    //Desabilita Botão
+    document.getElementById('generatePath').disabled = true;
+    generatePath();
+}
+
 function convertLadder() {
     return JSON.stringify(
         positionLadder.map(function (item) {
@@ -75,6 +90,7 @@ function isBarrel([x, y]) {
 }
 
 async function run() {
+    document.getElementById('generatePath').disabled = true;
     if (path.length == 0) {
         return;
     }
@@ -130,11 +146,13 @@ async function run() {
     oldPricess.children[0].setAttribute('src', 'img/win.png');
     let oldDonkey = document.getElementById(`${positionDonkey.x} ${positionDonkey.y}`);
     oldDonkey.children[0].setAttribute('src', 'img/donkey_sleep.png');
-    animate.remove();    
+    animate.remove();
+    document.getElementById('generatePath').disabled = false;
+    document.getElementById('generatePath').onclick = backPath;
 }
 
-function generatePath() {
-    
+function generatePath() {   
+
     var session = pl.create();
     session.consult("prolog.pl");
 
@@ -149,6 +167,7 @@ function generatePath() {
     path.reverse();
     document.getElementById('start').play();
     run();
+
 }
 
 async function teste() {
@@ -163,7 +182,6 @@ async function teste() {
 
     await jumpRight();
 }
-
 
 document.getElementById('generateMap').onclick = () => location.reload();
 document.getElementById('generatePath').onclick = generatePath;

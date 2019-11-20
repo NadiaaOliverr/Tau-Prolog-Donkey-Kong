@@ -5,7 +5,7 @@ export default class {
             for (let j = 0; j < 10; j++) {
                 let column = document.createElement('td');
                 column.setAttribute('id', `${i} ${j}`);
-                column.setAttribute('class', 'tabuleiro');
+                column.setAttribute('class', 'board');
                 row.append(column);
             }
             document.querySelector('#table').append(row);

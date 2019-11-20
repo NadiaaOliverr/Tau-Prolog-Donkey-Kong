@@ -11,10 +11,10 @@
 	<script src="../src/tau-prolog.js"></script>
 </head>
 
-<body class="fundo">
-	<audio id = "start" src="sound/GameStart.mp3"></audio>
-	<audio id = "jump"  src="sound/jump.mpeg"></audio>
-	<audio id = "win"  src="sound/win.mp3"></audio>
+<body class="background">
+	<audio id="start" src="sound/GameStart.mp3"></audio>
+	<audio id="jump" src="sound/jump.mpeg"></audio>
+	<audio id="win" src="sound/win.mp3"></audio>
 	<h1><img src="img/logo.png" alt="" width="300"></h1>
 
 	<div class="menu">
@@ -26,17 +26,16 @@
 			<div id="edge">
 				<div class="table">
 					<table id="table">
-						<img class=" position rounded float-right" width="200" src="img/monkey.png" alt="">
+						<img class=" position  float-right" width="200" src="img/monkey.png" alt="">
 					</table>
 				</div>
-			</div>									
-		</div>				
-	</div>	
+			</div>
 
-	<!-- <div class="footer">
-		<p>Desenvolvido por Genilton e Nádia copyright © 2019</p>	
-	</div> -->
-	
+		</div>
+	</div>
+
+
+
 	<script id="prolog.pl" type="text/prolog" src="prolog.pl">
 		:-use_module(library(lists)). 
 		
@@ -62,8 +61,6 @@
 			solucao_bl(EstadoInicial, Escadas, Martelo, CaminhoMartelo),
 			solucao_bl(Martelo, Escadas, Meta, CaminhoMeta),
 			append( CaminhoMeta, CaminhoMartelo, Solucao).
-			
-
 	</script>
 
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>

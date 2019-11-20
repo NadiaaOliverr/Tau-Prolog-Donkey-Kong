@@ -1,16 +1,72 @@
-.footer {
-    margin-top: 15px;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    color: #fff;
-    position: absolute;
-    bottom: 0;
+/*  Styles Globais  */
+body {
+    overflow: hidden;
 }
 
-tr{
+h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 30px;
+}
+
+tr {
     border: 2px solid #810b3d;
 }
+
+/* IDS */
+#edge {
+    margin: 0px;   
+    position: relative; 
+}
+
+/* Content */
+
+.background {
+    background-color: #000;
+    color: #000000;
+}
+
+.board {
+    width: 90px;
+    height: 75px;
+    border: 2px solid #810b3d;
+}
+
+.table {
+    position: absolute;
+}
+
+.container {
+    display: flex;
+    justify-content: center;    
+    align-items: center;
+}
+
+.col-md-10 {
+    position: relative;
+}
+
+.menu {
+    padding: 30px 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn {
+    background: #13007c;
+    border-color: #13007c;
+    margin-left: 20px;
+}
+
+.position {
+    margin-top: 200px;
+    margin-right: -220px;
+    padding-left: 5px;
+}
+
+/* Images and animates */
 
 .imgBox {
     width: 50px;
@@ -28,84 +84,10 @@ tr{
     margin-bottom: 53px;
 }
 
-.fundo {
-    background-color: #000;
-    color: #000000;
-}
-
-h1 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 30px;
-}
-
-#integrantes {
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.tabuleiro {
-    width: 90px;
-    height: 75px;
-    border: 2px solid #810b3d;
-}
-
-.btn {
-    background: #13007c;
-    border-color: #13007c;
-    ;
-    margin-left: 20px;
-}
-
-.menu {
-    padding: 30px 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.col-md-10{
-    position: relative;
-}
-
-.container {
-    display: flex;
-    justify-content: center;    
-    align-items: center;
-}
-
-.position {
-    margin-top: 200px;
-    margin-right: -220px;
-    padding-left: 5px;
-}
-
-.modal-title {
-    color: #000";
-
-}
-
-.modal-body {
-    color: #000";
-
-}
-
 .animate {
     position: absolute;
     margin-top: 399px;
     margin-left: 0px;
     width: 50px;
     height: 70px;    
-}
-
-#edge{
-    margin: 0px;   
-    position: relative; 
-}
-
-.table{
-    position: absolute;
 }
