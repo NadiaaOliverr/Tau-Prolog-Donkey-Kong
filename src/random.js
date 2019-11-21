@@ -6,6 +6,7 @@ export default class Random {
         this.positionDonkey = positionDonkey;
         this.positionLadder = [];
         this.positionBarrel = [];
+        this.positionWall = [];
         this.positionHammer;
     }
 
@@ -14,6 +15,7 @@ export default class Random {
             (x == this.positionPrincess.x && y == this.positionPrincess.y) ||
             (x == this.positionDonkey.x && y == this.positionDonkey.y) ||
             (x == this.positionPrincess.x - 1 && y == this.positionPrincess.y) ||
+            this.positionWall.find(item => JSON.stringify(item) === JSON.stringify({ x: x, y: y })) != undefined ||
             this.positionLadder.find(item => JSON.stringify(item) === JSON.stringify({ x: x, y: y })) != undefined ||
             this.positionBarrel.find(item => JSON.stringify(item) === JSON.stringify({ x: x, y: y })) != undefined) {
             return true;
@@ -36,7 +38,7 @@ export default class Random {
         }
 
         //Barril aleatorias
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 5; i++) {
             let row = parseInt(Math.random() * 5);
             let column = parseInt(Math.random() * 10);
 
@@ -45,6 +47,18 @@ export default class Random {
                 continue;
             }
             this.positionBarrel[this.positionBarrel.length] = { x: row, y: column };
+        }
+
+        //Parede aleatorias
+        for (let i = 0; i < 2; i++) {
+            let row = parseInt(Math.random() * 5);
+            let column = parseInt(Math.random() * 10);
+
+            if (this.invalidPosition(row, column)) {
+                i--;
+                continue;
+            }
+            this.positionWall[this.positionWall.length] = { x: row, y: column };
         }
 
         //Martelo aleatorio    
@@ -59,6 +73,7 @@ export default class Random {
         }
 
         return {
+            positionWall: this.positionWall,
             positionLadder: this.positionLadder,
             positionBarrel: this.positionBarrel,
             positionHammer: this.positionHammer

@@ -27,13 +27,14 @@ barrisConsecutivoEsquerda([X,Y],Barris):-
 %Direita
 sucessao([X,Y], _, Barris, [X,Yout]):- 
 	Y<9, 
-	%\+(barrisConsecutivoDireita([X,Y],Barris)),
+	\+(barrisConsecutivoDireita([X,Y],Barris)),
 	Yout is Y + 1. 
 %Esquerda
 sucessao([X,Y], _, Barris, [X,Yout]):- 
 	Y>0, 
-	%\+(barrisConsecutivoEsquerda([X,Y],Barris)),
+	\+(barrisConsecutivoEsquerda([X,Y],Barris)),
 	Yout is Y - 1. 
+
 sucessao([X,Y], Escadas, _, [Xout,Y]):- member( [X,Y], Escadas), X>0, Xout is X - 1. 
 sucessao([X,Y], Escadas, _, [Xout,Y]):- member( [X,Y], Escadas), X<4, Xout is X + 1. 
 
@@ -49,7 +50,7 @@ estende( [Estado|Caminho], ListaSucessores, Escadas, Barris) :-
 	bagof(  [Sucessor, Estado|Caminho], 
 			( sucessao(Estado, Escadas, Barris, Sucessor), 
 			\+( member(Sucessor,[Estado|Caminho]) )), 
-			ListaSucessores ), !. estende( _ ,[], _).
+			ListaSucessores ), !. estende( _ ,[], _,_).
 
 main(EstadoInicial, Escadas, Barris, Martelo, Meta, Solucao) :- 
 	solucao_bl(EstadoInicial, Escadas, Barris, Martelo, CaminhoMartelo),

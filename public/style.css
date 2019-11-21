@@ -82,6 +82,11 @@ tr {
     margin-left: 10px;
 }
 
+.wall {
+    height: 70px;
+    margin-left: 30px;
+}
+
 .ladder {
     width: 30px;
     height: 70px;

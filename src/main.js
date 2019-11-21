@@ -10,6 +10,7 @@ let path;
 
 //Componentes aleatorios        
 let {
+    positionWall,
     positionBarrel,
     positionLadder,
     positionHammer
@@ -29,6 +30,8 @@ function generateMap() {
     Draw.drawLadder(positionLadder);
     //Desenha barril
     Draw.drawBarrel(positionBarrel);
+    //Desenha Parede
+    Draw.drawWall(positionWall);
 }
 
 function backPath() {
@@ -49,6 +52,14 @@ function backPath() {
 function convertLadder() {
     return JSON.stringify(
         positionLadder.map(function (item) {
+            return [item.x, item.y];
+        })
+    );
+}
+
+function convertBarrel() {
+    return JSON.stringify(
+        positionBarrel.map(function (item) {
             return [item.x, item.y];
         })
     );
@@ -123,7 +134,7 @@ async function run() {
                     await move.left();
                 }
                 break;
-            case 'right':                
+            case 'right':
                 if (isBarrel(path[i + 1])) {
                     await move.jumpRight();
                     i++;
@@ -151,36 +162,35 @@ async function run() {
     document.getElementById('generatePath').onclick = backPath;
 }
 
-function generatePath() {   
+function generatePath() {
 
     var session = pl.create();
     session.consult("prolog.pl");
 
-    session.query(`main([0,0], ${convertLadder()}, [${positionHammer.x},${positionHammer.y}],[4,9], Solucao).`);
+    session.query(
+        `main([0,0], 
+        ${convertLadder()}, 
+        ${convertBarrel()},
+        [${positionHammer.x},${positionHammer.y}],
+        [4,9], 
+        Solucao).`
+    );
 
     var callback = function (response) {
         console.log(response);
         let str = response.toString().replace('Solucao/', '"path":');
         path = (JSON.parse(str)).path;
     }
-    session.answer(callback);
-    path.reverse();
-    document.getElementById('start').play();
-    run();
+    session.answer(callback);    
 
-}
-
-async function teste() {
-    let edge = document.getElementById('edge');
-    let animate = document.createElement('div');
-    let img = document.createElement('img');
-    img.setAttribute('src', 'img/marioRight.gif');
-    img.setAttribute('class', 'imgBox');
-    animate.setAttribute('class', 'animate');
-    animate.append(img);
-    edge.append(animate);
-
-    await jumpRight();
+    if(path){
+        path.reverse();
+        document.getElementById('start').play();
+        run();    
+    }else{
+        document.getElementById('loser').play();
+        setTimeout(()=>alert('Não existe solução'), 500);
+    }
 }
 
 document.getElementById('generateMap').onclick = () => location.reload();

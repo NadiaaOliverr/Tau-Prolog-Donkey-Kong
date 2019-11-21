@@ -63,4 +63,14 @@ export default class {
             box.append(img);
         }
     }
+
+    static drawWall(positionWall) {
+        for (let i = 0; i < positionWall.length; i++) {
+            let box = document.getElementById(`${positionWall[i].x} ${positionWall[i].y}`);
+            let img = document.createElement('img');
+            img.setAttribute('src', 'img/wall.png');
+            img.setAttribute('class', 'wall');
+            box.append(img);
+        }
+    }
 }
