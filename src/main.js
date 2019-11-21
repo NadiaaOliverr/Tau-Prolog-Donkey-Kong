@@ -2,56 +2,27 @@ import Draw from './draw';
 import Random from './random';
 import Move from './move';
 
-let positionPrincess = { x: 4, y: 9 };
-let positionDonkey = { x: 4, y: 8 };
-let positionMario = { x: 0, y: 0 };
-let positionAnimate = { x: 0, y: 399 };
-let path;
-
-//Componentes aleatorios        
-let {
-    positionWall,
-    positionBarrel,
-    positionLadder,
-    positionHammer
-} = new Random(positionMario, positionPrincess, positionDonkey).randomComponents();
-
 function generateMap() {
     Draw.drawScreen();
     //Desenha Mario
-    Draw.drawMario(positionMario);
+    Draw.drawMario();
     //Desenha Peach
-    Draw.drawPrincess(positionPrincess);
+    Draw.drawPrincess();
     //Desenha Donkey
-    Draw.drawDonkey(positionDonkey);
+    Draw.drawDonkey();
     //Desenha martelo
-    Draw.drawHammer(positionHammer);
+    Draw.drawHammer();
     //Desenha escada
-    Draw.drawLadder(positionLadder);
+    Draw.drawLadder();
     //Desenha barril
-    Draw.drawBarrel(positionBarrel);
+    Draw.drawBarrel();
     //Desenha Parede
-    Draw.drawWall(positionWall);
-}
-
-function backPath() {
-
-    let Pricess = document.getElementById(`${positionPrincess.x} ${positionPrincess.y}`);
-    Pricess.children[0].setAttribute('src', 'img/peach.gif');
-    let Donkey = document.getElementById(`${positionDonkey.x} ${positionDonkey.y}`);
-    Donkey.children[0].setAttribute('src', 'img/donkey_kong.webp');
-    //Desenha Mário
-    Draw.drawMario(positionMario);
-    //Desenha martelo
-    Draw.drawHammer(positionHammer);
-    //Desabilita Botão
-    document.getElementById('generatePath').disabled = true;
-    generatePath();
+    Draw.drawWall();
 }
 
 function convertLadder() {
     return JSON.stringify(
-        positionLadder.map(function (item) {
+        Draw.positionLadder.map(function (item) {
             return [item.x, item.y];
         })
     );
@@ -59,41 +30,14 @@ function convertLadder() {
 
 function convertBarrel() {
     return JSON.stringify(
-        positionBarrel.map(function (item) {
+        Draw.positionBarrel.map(function (item) {
             return [item.x, item.y];
         })
     );
 }
 
-function direction(step1, step2) {
-    let x = step2[0] - step1[0];
-    let y = step2[1] - step1[1];
-
-    if (x != 0) {
-        if (x == 1) {
-            return 'up';
-        }
-        if (x == -1) {
-            return 'down';
-        }
-    }
-
-    if (y != 0) {
-        if (y == 1) {
-            return 'right';
-        }
-        if (y == -1) {
-            return 'left';
-        }
-    }
-
-    if (x == 0 && y == 0) {
-        return 'hammer';
-    }
-}
-
 function isBarrel([x, y]) {
-    if (positionBarrel.find(element => (element.x == x && element.y == y)) == undefined) {
+    if (Draw.positionBarrel.find(element => (element.x == x && element.y == y)) == undefined) {
         return false;
     }
 
@@ -105,21 +49,13 @@ async function run() {
     if (path.length == 0) {
         return;
     }
-    let move = new Move(positionAnimate);
-    let edge = document.getElementById('edge');
-    let animate = document.createElement('div');
-    let img = document.createElement('img');
-    img.setAttribute('src', 'img/marioRight.gif');
-    img.setAttribute('class', 'imgBox');
-    animate.setAttribute('class', 'animate');
-    animate.append(img);
-    edge.append(animate);
 
-    let oldMario = document.getElementById(`${positionMario.x} ${positionMario.y}`);
-    oldMario.innerHTML = '';
+    let move = new Move();
+    Draw.drawAnimate();
+    Draw.deleteMario();
 
     for (let i = 0; i < (path.length - 1); i++) {
-        switch (direction(path[i], path[i + 1])) {
+        switch (move.direction(path[i], path[i + 1])) {
             case 'up':
                 await move.up();
                 break;
@@ -144,7 +80,7 @@ async function run() {
                 break;
             case 'hammer':
                 move.setSrcMario();
-                let oldHammer = document.getElementById(`${positionHammer.x} ${positionHammer.y}`);
+                let oldHammer = document.getElementById(`${Draw.positionHammer.x} ${Draw.positionHammer.y}`);
                 oldHammer.innerHTML = '';
                 break;
             default:
@@ -152,14 +88,15 @@ async function run() {
         }
     }
 
-    document.getElementById('win').play();
-    let oldPricess = document.getElementById(`${positionPrincess.x} ${positionPrincess.y}`);
-    oldPricess.children[0].setAttribute('src', 'img/win.png');
-    let oldDonkey = document.getElementById(`${positionDonkey.x} ${positionDonkey.y}`);
-    oldDonkey.children[0].setAttribute('src', 'img/donkey_sleep.png');
-    animate.remove();
+    Draw.victory();
+    Draw.deleteAnimate();
     document.getElementById('generatePath').disabled = false;
-    document.getElementById('generatePath').onclick = backPath;
+    document.getElementById('generatePath').onclick = replay;
+}
+
+function replay(){
+    Draw.resetMap();
+    generatePath();
 }
 
 function generatePath() {
@@ -171,7 +108,7 @@ function generatePath() {
         `main([0,0], 
         ${convertLadder()}, 
         ${convertBarrel()},
-        [${positionHammer.x},${positionHammer.y}],
+        [${Draw.positionHammer.x},${Draw.positionHammer.y}],
         [4,9], 
         Solucao).`
     );
@@ -192,6 +129,9 @@ function generatePath() {
         setTimeout(()=>alert('Não existe solução'), 500);
     }
 }
+
+let path;
+new Draw(new Random().randomComponents());
 
 document.getElementById('generateMap').onclick = () => location.reload();
 document.getElementById('generatePath').onclick = generatePath;

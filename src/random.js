@@ -1,9 +1,9 @@
 export default class Random {
 
-    constructor( positionMario, positionPrincess, positionDonkey){
-        this.positionMario = positionMario;
-        this.positionPrincess = positionPrincess;
-        this.positionDonkey = positionDonkey;
+    constructor(){
+        this.positionMario =  { x: 0, y: 0 };
+        this.positionPrincess = { x: 4, y: 9 };
+        this.positionDonkey = { x: 4, y: 8 };
         this.positionLadder = [];
         this.positionBarrel = [];
         this.positionWall = [];

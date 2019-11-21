@@ -1,8 +1,8 @@
 export default class Move {
 
-    constructor({ x, y }) {
+    constructor() {
         this.srcMario = 'mario';
-        Move.positionAnimate = { x: x, y: y };
+        Move.positionAnimate = { x: 0, y: 399 }
     }
 
     setSrcMario() {
@@ -138,4 +138,31 @@ export default class Move {
             }
         });
     }
+
+    direction(step1, step2) {
+        let x = step2[0] - step1[0];
+        let y = step2[1] - step1[1];
+    
+        if (x != 0) {
+            if (x == 1) {
+                return 'up';
+            }
+            if (x == -1) {
+                return 'down';
+            }
+        }
+    
+        if (y != 0) {
+            if (y == 1) {
+                return 'right';
+            }
+            if (y == -1) {
+                return 'left';
+            }
+        }
+    
+        if (x == 0 && y == 0) {
+            return 'hammer';
+        }
+    }    
 }
