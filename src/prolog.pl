@@ -1,58 +1,55 @@
 member(E, [E|_]).
-member(E, [_|T]):- member(E, T).
+member(E, [_|T]) :-
+    member(E, T).
 
-insere(E, [], [E]):- !.
-insere(E, List, [E|List]):- !.
+append([], L, L).
+append([H|T], L2, [H|T2]) :-
+    append(T, L2, T2).
 
-inverte([],[]).
-inverte([E|C], Linv):-
-	inverte(C,C_Inv),
-	append(C_Inv,[E], Linv).
-
-append([],L,L).
-append([H|T],L2,[H|T2]) :- append(T,L2,T2).
-
-barrisConsecutivoDireita([X,Y],Barris):- 
+consecutiveObstaclesRight([X,Y],Obstacles):- 
 	Yone is Y + 1, 
-	Ytwo is Y + 2, 
-	member([X,Yone],Barris),
-	member([X,Ytwo],Barris).
+	member([X,Y],Obstacles),
+	member([X,Yone],Obstacles).
 
-barrisConsecutivoEsquerda([X,Y],Barris):- 
+consecutiveObstaclesLeft([X,Y],Obstacles):- 
 	Yone is Y - 1, 
-	Ytwo is Y - 2, 
-	member([X,Yone],Barris),
-	member([X,Ytwo],Barris).
+	member([X,Y],Obstacles),
+	member([X,Yone],Obstacles).
 
-%Direita
-sucessao([X,Y], _, Barris, [X,Yout]):- 
-	Y<9, 
-	\+(barrisConsecutivoDireita([X,Y],Barris)),
-	Yout is Y + 1. 
-%Esquerda
-sucessao([X,Y], _, Barris, [X,Yout]):- 
-	Y>0, 
-	\+(barrisConsecutivoEsquerda([X,Y],Barris)),
-	Yout is Y - 1. 
+canGoLeft([X,Y], _, Obstacles) :- Y>0, \+(consecutiveObstaclesLeft([X,Y],Obstacles)).
+canGoright([X,Y], _, Obstacles):- Y<9, \+(consecutiveObstaclesRight([X,Y],Obstacles)).
+canGoDown([X,Y], Ladder, _) :- member( [X,Y], Ladder), X>0.
+canGoUp([X,Y], Ladder, _)   :- member( [X,Y], Ladder), X<4.
 
-sucessao([X,Y], Escadas, _, [Xout,Y]):- member( [X,Y], Escadas), X>0, Xout is X - 1. 
-sucessao([X,Y], Escadas, _, [Xout,Y]):- member( [X,Y], Escadas), X<4, Xout is X + 1. 
+% Para direita
+next([X,Y], _, Obstacles, [X,Yout]):- canGoright([X,Y], _, Obstacles), Yout is Y + 1. 
 
-solucao_bl(Inicial, Escadas, Barris, Meta, Solucao) :- bl([[Inicial]], Escadas, Barris, Meta, Solucao). 		
+% Para esquerda
+next([X,Y], _, Obstacles, [X,Yout]):- canGoLeft([X,Y], _, Obstacles), Yout is Y - 1. 
 
-bl([[Estado|Caminho]|_], _, _, Meta, [Estado|Caminho]) :- Meta==Estado. 
+% Para Baixo
+next([X,Y], Ladder, _, [Xout,Y]):- canGoDown([X,Y], Ladder, _), Xout is X - 1. 
 
-bl([Primeiro|Outros], Escadas, Barris, Meta, Solucao) :- 
-	estende(Primeiro, Sucessores, Escadas, Barris), append(Outros, Sucessores, NovaFronteira), 
-	bl(NovaFronteira, Escadas, Barris, Meta, Solucao).
+% Para Cima
+next([X,Y], Ladder, _, [Xout,Y]):- canGoUp([X,Y], Ladder, _), Xout is X + 1. 
 
-estende( [Estado|Caminho], ListaSucessores, Escadas, Barris) :- 
-	bagof(  [Sucessor, Estado|Caminho], 
-			( sucessao(Estado, Escadas, Barris, Sucessor), 
-			\+( member(Sucessor,[Estado|Caminho]) )), 
-			ListaSucessores ), !. estende( _ ,[], _,_).
 
-main(EstadoInicial, Escadas, Barris, Martelo, Meta, Solucao) :- 
-	solucao_bl(EstadoInicial, Escadas, Barris, Martelo, CaminhoMartelo),
-	solucao_bl(Martelo, Escadas, Barris, Meta, CaminhoMeta),
-	append( CaminhoMeta, CaminhoMartelo, Solucao).
+
+solution_bl(Initial, Ladder, Obstacles, Goal, Solution) :- bl([[Initial]], Ladder, Obstacles, Goal, Solution). 		
+
+bl([[State|Path]|_], _, _, Goal, [State|Path]) :- Goal==State. 
+
+bl([First|Others], Ladder, Obstacles, Goal, Solution) :- 
+	extend(First, Successors, Ladder, Obstacles), append(Others, Successors, NewFrontier), 
+	bl(NewFrontier, Ladder, Obstacles, Goal, Solution).
+
+extend( [State|Path], ListSuccessors, Ladder, Obstacles) :- 
+	bagof(  [Sucessor, State|Path], 
+			( next(State, Ladder, Obstacles, Sucessor), 
+			\+( member(Sucessor,[State|Path]) )), 
+			ListSuccessors ), !. extend( _ ,[], _,_).
+
+main(InitialState, Ladder, Obstacles, Hammer, Goal, Solution) :- 
+	solution_bl(InitialState, Ladder, Obstacles, Hammer, PathHammer),
+	solution_bl(Hammer, Ladder, Obstacles, Goal, PathGoal),
+	append( PathGoal, PathHammer, Solution).
