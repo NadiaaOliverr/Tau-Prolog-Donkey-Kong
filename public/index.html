@@ -21,6 +21,8 @@
 	<div class="menu">
 		<button id="generateMap" type="button" class="btn btn-outline-light">Gerar Mapa</button>
 		<button id="generatePath" type="button" class="btn btn-outline-light">Gerar Caminho</button>
+		<button id="generateModal" type="button" class="btn btn-outline-light" data-toggle="modal"
+			data-target="#modalCustomPath">Personalizar Caminho</button>
 	</div>
 	<div class="container">
 		<div id="container" class="col-md-10">
@@ -34,8 +36,30 @@
 		</div>
 	</div>
 
+	<!-- Modal -->
+	<div class="modal fade" id="modalCustomPath" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modal-title">Personalizar Caminho</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					1 - Clique no quadrado que deseja personalizar.<br>
+					2 - Digite a letra inicial do objeto que queira nesta posição.
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-dark" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div class="footer">
-		<p>Desenvolvido por Genilton e Nádia copyright © 2019</p>	
+		<p>Desenvolvido por Genilton e Nádia copyright © 2019</p>
 	</div>
 
 	<script id="prolog.pl" type="text/prolog" src="prolog.pl">
@@ -91,6 +115,12 @@
 	</script>
 
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
 	<script src="bundle.js"></script>
 </body>
 
