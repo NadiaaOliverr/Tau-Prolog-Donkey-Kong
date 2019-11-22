@@ -18,7 +18,7 @@ consecutiveObstaclesLeft([X,Y],Obstacles):-
 
 canGoLeft([X,Y], _, Obstacles) :- Y>0, \+(consecutiveObstaclesLeft([X,Y],Obstacles)).
 canGoright([X,Y], _, Obstacles):- Y<9, \+(consecutiveObstaclesRight([X,Y],Obstacles)).
-canGoDown([X,Y], Ladder, _) :- member( [X,Y], Ladder), X>0.
+canGoDown([X,Y], Ladder, _) :- member( [X-1,Y], Ladder), X>0.
 canGoUp([X,Y], Ladder, _)   :- member( [X,Y], Ladder), X<4.
 
 % Para direita
