@@ -13,7 +13,7 @@
 
 <body class="background">
 	<audio id="start" src="sound/GameStart.mp3"></audio>
-	<audio id="jump" src="sound/jump.mpeg"></audio>
+	<audio id="jump" src="sound/jump.mp3"></audio>
 	<audio id="win" src="sound/win.mp3"></audio>
 	<audio id="loser" src="sound/loser.mp3"></audio>
 	<h1><img src="img/logo.png" alt="" width="300"></h1>
@@ -65,52 +65,82 @@
 	<script id="prolog.pl" type="text/prolog" src="prolog.pl">
 		:-use_module(library(lists)). 
 		
-		consecutiveObstaclesRight([X,Y],Obstacles):- 
-		Yone is Y + 1, 
-		member([X,Y],Obstacles),
-		member([X,Yone],Obstacles).
-	
-		consecutiveObstaclesLeft([X,Y],Obstacles):- 
-			Yone is Y - 1, 
-			member([X,Y],Obstacles),
-			member([X,Yone],Obstacles).
+		consecutiveObstaclesRight([X, Y], Obstacles) :-
+			Yone is Y+1,
+			member([X, Y], Obstacles),
+			member([X, Yone], Obstacles).
+
+		consecutiveObstaclesLeft([X, Y], Obstacles) :-
+			Yone is Y-1,
+			member([X, Y], Obstacles),
+			member([X, Yone], Obstacles).
+			
+		canGoLeft([X, Y], _, Obstacles, Wall) :-
+			Y>0,
+			\+ consecutiveObstaclesLeft([X, Y], Obstacles),
+			Yone is Y-1,
+			\+(member([X, Yone], Wall)).
+
+		canGoright([X, Y], _, Obstacles, Wall) :-
+			Y<9,
+			\+ consecutiveObstaclesRight([X, Y], Obstacles),
+			Yone is Y+1,
+			\+(member([X, Yone], Wall)).
+
+		canGoDown([X, Y], Ladder, _, _) :-
+			Xone is X-1,
+			member([Xone, Y], Ladder),
+			X>0.
+
+		canGoUp([X, Y], Ladder, _, Wall) :-
+			member([X, Y], Ladder),
+			X<4,
+			Xone is X+1,
+			\+(member([Xone, Y], Wall)).
+			
+			% Para direita
+		next([X, Y], _, Obstacles, Wall, [X, Yout]) :-
+			canGoright([X, Y], _, Obstacles, Wall),
+			Yout is Y+1. 
+			
+			% Para esquerda
+		next([X, Y], _, Obstacles, Wall, [X, Yout]) :-
+			canGoLeft([X, Y], _, Obstacles, Wall),
+			Yout is Y-1. 
+			
+			% Para Baixo
+		next([X, Y], Ladder, _, Wall, [Xout, Y]) :-
+			canGoDown([X, Y], Ladder, _, Wall),
+			Xout is X-1. 
+			
+			% Para Cima
+		next([X, Y], Ladder, _, Wall, [Xout, Y]) :-
+			canGoUp([X, Y], Ladder, _, Wall),
+			Xout is X+1. 
 		
-		canGoLeft([X,Y], _, Obstacles) :- Y>0, \+(consecutiveObstaclesLeft([X,Y],Obstacles)).
-		canGoright([X,Y], _, Obstacles):- Y<9, \+(consecutiveObstaclesRight([X,Y],Obstacles)).
-		canGoDown([X,Y], Ladder, _) :- Xone is X - 1, member( [Xone,Y], Ladder), X>0.
-		canGoUp([X,Y], Ladder, _)   :- member( [X,Y], Ladder), X<4.
-		
-		% Para direita
-		next([X,Y], _, Obstacles, [X,Yout]):- canGoright([X,Y], _, Obstacles), Yout is Y + 1. 
-		
-		% Para esquerda
-		next([X,Y], _, Obstacles, [X,Yout]):- canGoLeft([X,Y], _, Obstacles), Yout is Y - 1. 
-		
-		% Para Baixo
-		next([X,Y], Ladder, _, [Xout,Y]):- canGoDown([X,Y], Ladder, _), Xout is X - 1. 
-		
-		% Para Cima
-		next([X,Y], Ladder, _, [Xout,Y]):- canGoUp([X,Y], Ladder, _), Xout is X + 1. 
 		
 		
+		solution_bl(Initial, Ladder, Obstacles, Wall, Goal, Solution) :-
+		bl([[Initial]], Ladder, Obstacles, Wall, Goal, Solution). 		
 		
-		solution_bl(Initial, Ladder, Obstacles, Goal, Solution) :- bl([[Initial]], Ladder, Obstacles, Goal, Solution). 		
+		bl([[State|Path]|_], _, _, _, Goal, [State|Path]) :-
+		Goal==State. 
 		
-		bl([[State|Path]|_], _, _, Goal, [State|Path]) :- Goal==State. 
+		bl([First|Others], Ladder, Obstacles, Wall, Goal, Solution) :-
+		extend(First, Successors, Ladder, Obstacles, Wall),
+		append(Others, Successors, NewFrontier),
+		bl(NewFrontier, Ladder, Obstacles, Wall, Goal, Solution).
 		
-		bl([First|Others], Ladder, Obstacles, Goal, Solution) :- 
-			extend(First, Successors, Ladder, Obstacles), append(Others, Successors, NewFrontier), 
-			bl(NewFrontier, Ladder, Obstacles, Goal, Solution).
+		extend([State|Path], ListSuccessors, Ladder, Obstacles, Wall) :-
+		bagof([Sucessor, State|Path],
+			(next(State, Ladder, Obstacles, Wall, Sucessor), \+member(Sucessor, [State|Path])),
+			ListSuccessors),
+		!. 
+		extend( _ ,[], _,_,_).
 		
-		extend( [State|Path], ListSuccessors, Ladder, Obstacles) :- 
-			bagof(  [Sucessor, State|Path], 
-					( next(State, Ladder, Obstacles, Sucessor), 
-					\+( member(Sucessor,[State|Path]) )), 
-					ListSuccessors ), !. extend( _ ,[], _,_).
-		
-		main(InitialState, Ladder, Obstacles, Hammer, Goal, Solution) :- 
-			solution_bl(InitialState, Ladder, Obstacles, Hammer, PathHammer),
-			solution_bl(Hammer, Ladder, Obstacles, Goal, PathGoal),
+		main(InitialState, Ladder, Obstacles, Wall, Hammer, Goal, Solution) :- 
+			solution_bl(InitialState, Ladder, Obstacles, Wall, Hammer, PathHammer),
+			solution_bl(Hammer, Ladder, Obstacles, Wall, Goal, PathGoal),
 			append( PathGoal, PathHammer, Solution).
 	</script>
 

@@ -196,6 +196,14 @@ export default class Draw {
         );
     }
 
+    static convertWall() {
+        return JSON.stringify(
+            Draw.positionWall.map(function (item) {
+                return [item.x, item.y];
+            })
+        );
+    }
+
     static isBarrel([x, y]) {
         if (Draw.positionBarrel.find(element => (element.x == x && element.y == y)) == undefined) {
             return false;
@@ -341,7 +349,7 @@ export default class Draw {
                 Draw.positionPrincess = { x: -1, y: -1 };
                 break;
             case 'm':
-                Draw.positionMario = { x: -1, y: -1 };
+                Draw.positionMario = { x: -10, y: -10 };
                 break;
             case 'd':
                 Draw.positionDonkey = { x: -1, y: -1 };

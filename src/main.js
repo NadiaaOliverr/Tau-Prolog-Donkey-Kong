@@ -83,6 +83,7 @@ function generatePath() {
         `main([${Draw.positionMario.x},${Draw.positionMario.y}], 
         ${Draw.convertLadder()}, 
         ${Draw.convertBarrel()},
+        ${Draw.convertWall()},
         [${Draw.positionHammer.x},${Draw.positionHammer.y}],
         [${Draw.positionPrincess.x},${Draw.positionPrincess.y}], 
         Solucao).`
