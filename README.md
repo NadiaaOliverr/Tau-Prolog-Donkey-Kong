@@ -2,9 +2,9 @@
 <blockquote>
 <p><strong></strong> <em>O jogo consiste no resgate da princesa e para isto, o personagem Mário precisa possuir um martelo capaz de derrotar o Donkey Kong e salvar sua amada.</em></p>
 </blockquote>  
-<center>
-    <img src="https://user-images.githubusercontent.com/41811634/69400716-793d9a80-0cd1-11ea-9955-f13ba7b5fbfa.png" width=450>
-</center>
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/41811634/69400716-793d9a80-0cd1-11ea-9955-f13ba7b5fbfa.png" width=500>
+</p>
 
 ## Codificação
 Para a codificação deste projeto utilizou-se a linguagem Java Script e o framework Tau Prolog para interpretação esta linguagem de programação lógica. Para realizar as buscas....
