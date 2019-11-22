@@ -53,7 +53,7 @@
 		
 		canGoLeft([X,Y], _, Obstacles) :- Y>0, \+(consecutiveObstaclesLeft([X,Y],Obstacles)).
 		canGoright([X,Y], _, Obstacles):- Y<9, \+(consecutiveObstaclesRight([X,Y],Obstacles)).
-		canGoDown([X,Y], Ladder, _) :- member( [X,Y], Ladder), X>0.
+		canGoDown([X,Y], Ladder, _) :- Xone is X - 1, member( [Xone,Y], Ladder), X>0.
 		canGoUp([X,Y], Ladder, _)   :- member( [X,Y], Ladder), X<4.
 		
 		% Para direita
