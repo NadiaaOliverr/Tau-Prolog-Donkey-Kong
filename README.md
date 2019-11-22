@@ -1,5 +1,8 @@
-# Donkey Kong
-O jogo consiste no resgate da princesa e para isto, o personagem Mário tem que possuir um martelo capaz de derrotar o Donkey Kong. 
+# Donkey Kong :monkey:
+<blockquote>
+<p><strong></strong> <em>O jogo consiste no resgate da princesa e para isto, o personagem Mário precisa possuir um martelo capaz de derrotar o Donkey Kong e salvar sua amada.</em></p>
+</blockquote>
+
 ## Motivação
 Codificação feita durante a matéria de Inteligência Artificial do curso de Sistemas de Informação.
 ## Codificação
@@ -11,4 +14,4 @@ Abra no navegador o arquivo index.html e seja feliz :)
 --------- | ------
 
 
-**Tem alguma sugestão de melhoria ou encontrou algum bug? Conta para gente, deixe sua issue** :wink:
+**Tem alguma sugestão de melhoria ou encontrou algum bug? Conta pra gente, deixe sua issue** :wink:
