@@ -20,30 +20,6 @@ function generateMap() {
     Draw.drawWall();
 }
 
-function convertLadder() {
-    return JSON.stringify(
-        Draw.positionLadder.map(function (item) {
-            return [item.x, item.y];
-        })
-    );
-}
-
-function convertBarrel() {
-    return JSON.stringify(
-        Draw.positionBarrel.map(function (item) {
-            return [item.x, item.y];
-        })
-    );
-}
-
-function isBarrel([x, y]) {
-    if (Draw.positionBarrel.find(element => (element.x == x && element.y == y)) == undefined) {
-        return false;
-    }
-
-    return true;
-}
-
 async function run() {
     document.getElementById('generatePath').disabled = true;
     if (path.length == 0) {
@@ -63,7 +39,7 @@ async function run() {
                 await move.down();
                 break;
             case 'left':
-                if (isBarrel(path[i + 1])) {
+                if (Draw.isBarrel(path[i + 1])) {
                     await move.jumpLeft();
                     i++;
                 } else {
@@ -71,7 +47,7 @@ async function run() {
                 }
                 break;
             case 'right':
-                if (isBarrel(path[i + 1])) {
+                if (Draw.isBarrel(path[i + 1])) {
                     await move.jumpRight();
                     i++;
                 } else {
@@ -80,8 +56,7 @@ async function run() {
                 break;
             case 'hammer':
                 move.setSrcMario();
-                let oldHammer = document.getElementById(`${Draw.positionHammer.x} ${Draw.positionHammer.y}`);
-                oldHammer.innerHTML = '';
+                Draw.deleteHammer();
                 break;
             default:
                 break;
@@ -105,11 +80,11 @@ function generatePath() {
     session.consult("prolog.pl");
 
     session.query(
-        `main([0,0], 
-        ${convertLadder()}, 
-        ${convertBarrel()},
+        `main([${Draw.positionMario.x},${Draw.positionMario.y}], 
+        ${Draw.convertLadder()}, 
+        ${Draw.convertBarrel()},
         [${Draw.positionHammer.x},${Draw.positionHammer.y}],
-        [4,9], 
+        [${Draw.positionPrincess.x},${Draw.positionPrincess.y}], 
         Solucao).`
     );
 

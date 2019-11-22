@@ -1,3 +1,5 @@
+import { parse } from "path";
+
 export default class Draw {
 
     constructor(randoms) {
@@ -26,10 +28,6 @@ export default class Draw {
         }
     }
 
-    static swapContent() {
-        console.log(this.id, Draw.positionBarrel);
-    }
-
     static drawMario() {
         let box = document.getElementById(`${Draw.positionMario.x} ${Draw.positionMario.y}`);
         let img = document.createElement('img');
@@ -40,10 +38,12 @@ export default class Draw {
 
     static drawPrincess() {
         let box = document.getElementById(`${Draw.positionPrincess.x} ${Draw.positionPrincess.y}`);
-        let img = document.createElement('img');
-        img.setAttribute('src', 'img/peach.gif');
-        img.setAttribute('class', 'imgBox');
-        box.append(img);
+        if (box.children.length == 0) {
+            let img = document.createElement('img');
+            img.setAttribute('src', 'img/peach.gif');
+            img.setAttribute('class', 'imgBox');
+            box.append(img);
+        }
     }
 
     static drawDonkey() {
@@ -66,19 +66,23 @@ export default class Draw {
 
     static drawHammer() {
         let box = document.getElementById(`${Draw.positionHammer.x} ${Draw.positionHammer.y}`);
-        let img = document.createElement('img');
-        img.setAttribute('src', 'img/hammer.png');
-        img.setAttribute('class', 'imgBox');
-        box.append(img);
+        if (box.children.length == 0) {
+            let img = document.createElement('img');
+            img.setAttribute('src', 'img/hammer.png');
+            img.setAttribute('class', 'imgBox');
+            box.append(img);
+        }
     }
 
     static drawBarrel() {
         for (let i = 0; i < Draw.positionBarrel.length; i++) {
             let box = document.getElementById(`${Draw.positionBarrel[i].x} ${Draw.positionBarrel[i].y}`);
-            let img = document.createElement('img');
-            img.setAttribute('src', 'img/barrel.png');
-            img.setAttribute('class', 'imgBox');
-            box.append(img);
+            if(box.children.length == 0){
+                let img = document.createElement('img');
+                img.setAttribute('src', 'img/barrel.png');
+                img.setAttribute('class', 'imgBox');
+                box.append(img);    
+            }
         }
     }
 
@@ -112,21 +116,196 @@ export default class Draw {
         Draw.drawMario();
         //Desenha martelo
         Draw.drawHammer();
-    }    
-
-    static deleteMario(){
-        document.getElementById(`${Draw.positionMario.x} ${Draw.positionMario.y}`).innerHTML = '';    
     }
 
-    static deleteAnimate(){
-        document.getElementsByClassName('animate')[0].remove();
+    static deleteMario() {
+        let old = document.getElementById(`${Draw.positionMario.x} ${Draw.positionMario.y}`);
+        if (old != undefined) {
+            old.innerHTML = '';
+        }
     }
 
-    static victory(){
+    static deletePeach() {
+        let old = document.getElementById(`${Draw.positionPrincess.x} ${Draw.positionPrincess.y}`);
+        if (old != undefined) {
+            old.innerHTML = '';
+        }
+    }
+
+    static deleteHammer() {
+        let old = document.getElementById(`${Draw.positionHammer.x} ${Draw.positionHammer.y}`);
+        if (old != undefined) {
+            old.innerHTML = '';
+        }
+    }
+
+    static deleteAnimate() {
+        let old = document.getElementsByClassName('animate')[0];
+        if (old != undefined) {
+            old.remove();
+        }
+    }
+
+    static victory() {
         document.getElementById('win').play();
         let oldPricess = document.getElementById(`${Draw.positionPrincess.x} ${Draw.positionPrincess.y}`);
         oldPricess.children[0].setAttribute('src', 'img/win.png');
         let oldDonkey = document.getElementById(`${Draw.positionDonkey.x} ${Draw.positionDonkey.y}`);
-        oldDonkey.children[0].setAttribute('src', 'img/donkey_sleep.png');    
+        oldDonkey.children[0].setAttribute('src', 'img/donkey_sleep.png');
+    }
+
+    static convertLadder() {
+        return JSON.stringify(
+            Draw.positionLadder.map(function (item) {
+                return [item.x, item.y];
+            })
+        );
+    }
+
+    static convertBarrel() {
+        return JSON.stringify(
+            Draw.positionBarrel.map(function (item) {
+                return [item.x, item.y];
+            })
+        );
+    }
+
+    static isBarrel([x, y]) {
+        if (Draw.positionBarrel.find(element => (element.x == x && element.y == y)) == undefined) {
+            return false;
+        }
+
+        return true;
+    }
+
+    static identifyContent(id) {
+        let content = document.getElementById(id).children[0];
+        if (content == undefined) {
+            return 'e';
+        }
+        switch (content.getAttribute('src')) {
+            case 'img/hammer.png':
+                return 'h';
+            case 'img/peach.gif':
+                return 'p';
+            case 'img/barrel.png':
+                return 'b';
+            case 'img/wall.png':
+                return 'w';
+            case 'img/ladder.png':
+                return 'l';
+            case 'img/mario.png':
+                return 'm';
+            case 'img/donkey_kong.webp':
+                return 'd';
+            case 'img/win.png':
+                return 'p';
+            case 'img/donkey_sleep.png':
+                return 'd';
+        }
+    }
+
+    static swapContent() {
+        if (!document.getElementById('generatePath').disabled) {
+            let oldContent = Draw.identifyContent(this.id);
+            let newContent = prompt(
+                'h  - Martelo\n' +
+                'p  - Princesa\n' +
+                'b  - Barril\n' +
+                'w  - Parede\n' +
+                'm  - Mario\n' +
+                'd  - Donkey Kong\n' +
+                'e  - Vazio\n' +
+                'l  - Escada\n'
+                , oldContent
+            );
+
+            switch (newContent) {
+                case 'h':
+                    if (newContent != oldContent) {
+                        Draw.deleteHammer();
+                        Draw.removeOld(oldContent, this.id);
+                        document.getElementById(this.id).innerHTML = '';
+                        Draw.positionHammer = { x: parseInt(this.id[0]), y: parseInt(this.id[2]) };
+                        Draw.drawHammer();
+                    }
+                    break;
+                case 'p':
+                    if (newContent != oldContent) {
+                        Draw.deletePeach();
+                        Draw.removeOld(oldContent, this.id);
+                        document.getElementById(this.id).innerHTML = '';
+                        Draw.positionPrincess = { x: parseInt(this.id[0]), y: parseInt(this.id[2]) };
+                        Draw.drawPrincess();
+                    }
+                    break;
+                case 'b':
+                    if (newContent != oldContent) {                        
+                        Draw.removeOld(oldContent, this.id);
+                        document.getElementById(this.id).innerHTML = '';
+                        Draw.positionBarrel.push({ x: parseInt(this.id[0]), y: parseInt(this.id[2])});
+                        Draw.drawBarrel();
+                    }
+                    break;
+                case 'w':
+                    if (newContent != oldContent) {
+
+                    }
+                    break;
+                case 'm':
+                    if (newContent != oldContent) {
+
+                    }
+                    break;
+                case 'd':
+                    if (newContent != oldContent) {
+
+                    }
+                    break;
+                case 'e':
+                    if (newContent != oldContent) {
+
+                    }
+                    break;
+                case 'l':
+                    if (newContent != oldContent) {
+
+                    }
+                    break;
+                default:
+                    alert("Essa opção não existe");
+                    break;
+            }
+            console.log(newContent);
+        }
+    }
+
+    static removeOld(old, id) {
+        id = { x: parseInt(id[0]), y: parseInt(id[2]) };
+        switch (old) {
+            case 'b':
+                Draw.positionBarrel = Draw.positionBarrel.filter(item => !(item.x == id.x && item.y == id.y));
+                break;
+            case 'w':
+                Draw.positionWall = Draw.positionWall.filter(item => !(item.x == id.x && item.y == id.y));
+                break;
+            case 'l':
+                Draw.positionLadder = Draw.positionLadder.filter(item => !(item.x == id.x && item.y == id.y));
+                break;
+            case 'h':
+                Draw.positionHammer = { x: -1, y: -1 };
+                break;
+            case 'p':
+                Draw.positionPrincess = { x: -1, y: -1 };
+                break;
+            case 'm':
+                Draw.positionMario = { x: -1, y: -1 };
+                break;
+            case 'd':
+                Draw.positionDonkey = { x: -1, y: -1 };
+                break;
+            default:
+                break;
+        }
     }
 }
