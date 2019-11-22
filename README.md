@@ -3,7 +3,7 @@
 <p><strong></strong> <em>O jogo consiste no resgate da princesa e para isto, o personagem Mário precisa possuir um martelo capaz de derrotar o Donkey Kong e salvar sua amada.</em></p>
 </blockquote>  
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/41811634/69400716-793d9a80-0cd1-11ea-9955-f13ba7b5fbfa.png" width=500>
+    <img src="https://user-images.githubusercontent.com/41811634/69400716-793d9a80-0cd1-11ea-9955-f13ba7b5fbfa.png" width=700>
 </p>
 
 ## Codificação
