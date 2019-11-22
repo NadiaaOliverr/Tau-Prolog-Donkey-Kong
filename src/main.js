@@ -25,8 +25,8 @@ async function run() {
     if (path.length == 0) {
         return;
     }
-
-    let move = new Move();
+    
+    let move = new Move(Draw.positionAnimate);
     Draw.drawAnimate();
     Draw.deleteMario();
 

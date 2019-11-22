@@ -1,17 +1,24 @@
-import { parse } from "path";
-
 export default class Draw {
 
     constructor(randoms) {
         Draw.positionPrincess = { x: 4, y: 9 };
         Draw.positionDonkey = { x: 4, y: 8 };
         Draw.positionMario = { x: 0, y: 0 };
+        Draw.positionAnimate = {}
+        Draw.setPositionAnimate();
 
         //Componentes aleatorios        
-        Draw.positionWall = randoms.positionWall;
+        Draw.positionWall   = randoms.positionWall;
         Draw.positionBarrel = randoms.positionBarrel;
         Draw.positionLadder = randoms.positionLadder;
         Draw.positionHammer = randoms.positionHammer;
+    }
+
+    static setPositionAnimate(){
+        Draw.positionAnimate = {
+            x:  Draw.positionMario.y * 90,
+            y: (384 - 96 * Draw.positionMario.x) + 15
+        };
     }
 
     static drawScreen() {
@@ -52,7 +59,7 @@ export default class Draw {
         let box = document.getElementById(`${Draw.positionDonkey.x} ${Draw.positionDonkey.y}`);
         if (box.children.length == 0) {
             let img = document.createElement('img');
-            img.setAttribute('src', 'img/donkey_kong.webp');
+            img.setAttribute('src', 'img/donkey.gif');
             img.setAttribute('class', 'imgBox');
             box.append(img);
         }
@@ -113,13 +120,16 @@ export default class Draw {
         animate.setAttribute('class', 'animate');
         animate.append(img);
         edge.append(animate);
+        animate.style.marginLeft = Draw.positionAnimate.x + "px";
+        animate.style.marginTop  = Draw.positionAnimate.y + "px";
     }
 
     static resetMap() {
-        let Pricess = document.getElementById(`${Draw.positionPrincess.x} ${Draw.positionPrincess.y}`);
-        Pricess.children[0].setAttribute('src', 'img/peach.gif');
-        let Donkey = document.getElementById(`${Draw.positionDonkey.x} ${Draw.positionDonkey.y}`);
-        Donkey.children[0].setAttribute('src', 'img/donkey_kong.webp');
+        Draw.setPositionAnimate();
+        Draw.deleteDonkey();
+        Draw.deletePeach();
+        Draw.drawDonkey();
+        Draw.drawPrincess();
         //Desenha Mário
         Draw.drawMario();
         //Desenha martelo
@@ -278,6 +288,7 @@ export default class Draw {
                         document.getElementById(this.id).innerHTML = '';
                         Draw.positionMario = { x: parseInt(this.id[0]), y: parseInt(this.id[2]) };
                         Draw.drawMario();
+                        Draw.setPositionAnimate();
                     }
                     break;
                 case 'd':

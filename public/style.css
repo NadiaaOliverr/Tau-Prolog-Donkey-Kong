@@ -64,7 +64,7 @@ tr {
 }
 
 .footer {
-    margin-top: 495px;
+    margin-top: 520px;
     justify-content: center;
     align-items: center;
     display: flex;
@@ -98,8 +98,8 @@ tr {
 
 .animate {
     position: absolute;
-    margin-top: 399px;
-    margin-left: 0px;
+    /* margin-top: 399px;
+    margin-left: 0px; */
     width: 50px;
     height: 70px;    
 }
