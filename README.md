@@ -7,7 +7,7 @@
 </p>
 
 ## Codificação
-Para a codificação deste projeto utilizou-se a linguagem Java Script e o framework Tau Prolog para interpretação esta linguagem de programação lógica. Para realizar as buscas....
+Para a codificação deste projeto utilizou-se a linguagem Java Script e o framework Tau Prolog para interpretação da linguagem prolog.
 
 ## Como executar ?
 Abra no navegador o arquivo ```index.html``` e divirta-se!
