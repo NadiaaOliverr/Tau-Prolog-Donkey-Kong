@@ -30,10 +30,12 @@ export default class Draw {
 
     static drawMario() {
         let box = document.getElementById(`${Draw.positionMario.x} ${Draw.positionMario.y}`);
-        let img = document.createElement('img');
-        img.setAttribute('src', 'img/mario.png');
-        img.setAttribute('class', 'imgBox');
-        box.append(img);
+        if (box.children.length == 0) {
+            let img = document.createElement('img');
+            img.setAttribute('src', 'img/mario.png');
+            img.setAttribute('class', 'imgBox');
+            box.append(img);
+        }
     }
 
     static drawPrincess() {
@@ -48,19 +50,23 @@ export default class Draw {
 
     static drawDonkey() {
         let box = document.getElementById(`${Draw.positionDonkey.x} ${Draw.positionDonkey.y}`);
-        let img = document.createElement('img');
-        img.setAttribute('src', 'img/donkey_kong.webp');
-        img.setAttribute('class', 'imgBox');
-        box.append(img);
+        if (box.children.length == 0) {
+            let img = document.createElement('img');
+            img.setAttribute('src', 'img/donkey_kong.webp');
+            img.setAttribute('class', 'imgBox');
+            box.append(img);
+        }
     }
 
     static drawLadder() {
         for (let i = 0; i < Draw.positionLadder.length; i++) {
             let box = document.getElementById(`${Draw.positionLadder[i].x} ${Draw.positionLadder[i].y}`);
-            let img = document.createElement('img');
-            img.setAttribute('src', 'img/ladder.png');
-            img.setAttribute('class', 'ladder');
-            box.append(img);
+            if (box.children.length == 0) {
+                let img = document.createElement('img');
+                img.setAttribute('src', 'img/ladder.png');
+                img.setAttribute('class', 'ladder');
+                box.append(img);
+            }
         }
     }
 
@@ -77,11 +83,11 @@ export default class Draw {
     static drawBarrel() {
         for (let i = 0; i < Draw.positionBarrel.length; i++) {
             let box = document.getElementById(`${Draw.positionBarrel[i].x} ${Draw.positionBarrel[i].y}`);
-            if(box.children.length == 0){
+            if (box.children.length == 0) {
                 let img = document.createElement('img');
                 img.setAttribute('src', 'img/barrel.png');
                 img.setAttribute('class', 'imgBox');
-                box.append(img);    
+                box.append(img);
             }
         }
     }
@@ -89,10 +95,12 @@ export default class Draw {
     static drawWall() {
         for (let i = 0; i < Draw.positionWall.length; i++) {
             let box = document.getElementById(`${Draw.positionWall[i].x} ${Draw.positionWall[i].y}`);
-            let img = document.createElement('img');
-            img.setAttribute('src', 'img/wall.png');
-            img.setAttribute('class', 'wall');
-            box.append(img);
+            if (box.children.length == 0) {
+                let img = document.createElement('img');
+                img.setAttribute('src', 'img/wall.png');
+                img.setAttribute('class', 'wall');
+                box.append(img);
+            }
         }
     }
 
@@ -116,6 +124,14 @@ export default class Draw {
         Draw.drawMario();
         //Desenha martelo
         Draw.drawHammer();
+    }
+
+
+    static deleteDonkey() {
+        let old = document.getElementById(`${Draw.positionDonkey.x} ${Draw.positionDonkey.y}`);
+        if (old != undefined) {
+            old.innerHTML = '';
+        }
     }
 
     static deleteMario() {
@@ -240,36 +256,51 @@ export default class Draw {
                     }
                     break;
                 case 'b':
-                    if (newContent != oldContent) {                        
+                    if (newContent != oldContent) {
                         Draw.removeOld(oldContent, this.id);
                         document.getElementById(this.id).innerHTML = '';
-                        Draw.positionBarrel.push({ x: parseInt(this.id[0]), y: parseInt(this.id[2])});
+                        Draw.positionBarrel.push({ x: parseInt(this.id[0]), y: parseInt(this.id[2]) });
                         Draw.drawBarrel();
                     }
                     break;
                 case 'w':
                     if (newContent != oldContent) {
-
+                        Draw.removeOld(oldContent, this.id);
+                        document.getElementById(this.id).innerHTML = '';
+                        Draw.positionWall.push({ x: parseInt(this.id[0]), y: parseInt(this.id[2]) });
+                        Draw.drawWall();
                     }
                     break;
                 case 'm':
                     if (newContent != oldContent) {
-
+                        Draw.deleteMario();
+                        Draw.removeOld(oldContent, this.id);
+                        document.getElementById(this.id).innerHTML = '';
+                        Draw.positionMario = { x: parseInt(this.id[0]), y: parseInt(this.id[2]) };
+                        Draw.drawMario();
                     }
                     break;
                 case 'd':
                     if (newContent != oldContent) {
-
-                    }
-                    break;
-                case 'e':
-                    if (newContent != oldContent) {
-
+                        Draw.deleteDonkey();
+                        Draw.removeOld(oldContent, this.id);
+                        document.getElementById(this.id).innerHTML = '';
+                        Draw.positionDonkey = { x: parseInt(this.id[0]), y: parseInt(this.id[2]) };
+                        Draw.drawDonkey();
                     }
                     break;
                 case 'l':
                     if (newContent != oldContent) {
-
+                        Draw.removeOld(oldContent, this.id);
+                        document.getElementById(this.id).innerHTML = '';
+                        Draw.positionLadder.push({ x: parseInt(this.id[0]), y: parseInt(this.id[2]) });
+                        Draw.drawLadder();
+                    }
+                    break;
+                case 'e':
+                    if (newContent != oldContent) {
+                        Draw.removeOld(oldContent, this.id);
+                        document.getElementById(this.id).innerHTML = '';
                     }
                     break;
                 default:
