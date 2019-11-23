@@ -82,15 +82,14 @@ function generatePath() {
     session.query(
         `main([${Draw.positionMario.x},${Draw.positionMario.y}], 
         ${Draw.convertLadder()}, 
-        ${Draw.convertBarrel()},
+        ${Draw.convertObstacles()},
         ${Draw.convertWall()},
         [${Draw.positionHammer.x},${Draw.positionHammer.y}],
         [${Draw.positionPrincess.x},${Draw.positionPrincess.y}], 
         Solucao).`
     );
 
-    var callback = function (response) {
-        console.log(response);
+    var callback = function (response) {        
         let str = response.toString().replace('Solucao/', '"path":');
         path = (JSON.parse(str)).path;
     }

@@ -65,33 +65,33 @@
 	<script id="prolog.pl" type="text/prolog" src="prolog.pl">
 		:-use_module(library(lists)). 
 		
-		consecutiveObstaclesRight([X, Y], Obstacles) :-
-			Yone is Y+1,
-			member([X, Y], Obstacles),
-			member([X, Yone], Obstacles).
-
-		consecutiveObstaclesLeft([X, Y], Obstacles) :-
+		consecutiveObstaclesRight([X, Y], Ladder, Obstacles) :-
+		Yone is Y+1,
+		member([X, Y], Obstacles),
+		(member([X, Yone], Obstacles);member([X, Yone], Ladder)).
+	
+		consecutiveObstaclesLeft([X, Y], Ladder, Obstacles) :-
 			Yone is Y-1,
 			member([X, Y], Obstacles),
-			member([X, Yone], Obstacles).
+			(member([X, Yone], Obstacles);member([X, Yone], Ladder)).
 			
-		canGoLeft([X, Y], _, Obstacles, Wall) :-
+		canGoLeft([X, Y], Ladder, Obstacles, Wall) :-
 			Y>0,
-			\+ consecutiveObstaclesLeft([X, Y], Obstacles),
+			\+ consecutiveObstaclesLeft([X, Y], Ladder, Obstacles),
 			Yone is Y-1,
 			\+(member([X, Yone], Wall)).
-
-		canGoright([X, Y], _, Obstacles, Wall) :-
+		
+		canGoright([X, Y], Ladder, Obstacles, Wall) :-
 			Y<9,
-			\+ consecutiveObstaclesRight([X, Y], Obstacles),
+			\+ consecutiveObstaclesRight([X, Y], Ladder, Obstacles),
 			Yone is Y+1,
 			\+(member([X, Yone], Wall)).
-
+		
 		canGoDown([X, Y], Ladder, _, _) :-
 			Xone is X-1,
 			member([Xone, Y], Ladder),
 			X>0.
-
+		
 		canGoUp([X, Y], Ladder, _, Wall) :-
 			member([X, Y], Ladder),
 			X<4,
@@ -99,13 +99,13 @@
 			\+(member([Xone, Y], Wall)).
 			
 			% Para direita
-		next([X, Y], _, Obstacles, Wall, [X, Yout]) :-
-			canGoright([X, Y], _, Obstacles, Wall),
+		next([X, Y], Ladder, Obstacles, Wall, [X, Yout]) :-
+			canGoright([X, Y], Ladder, Obstacles, Wall),
 			Yout is Y+1. 
 			
 			% Para esquerda
-		next([X, Y], _, Obstacles, Wall, [X, Yout]) :-
-			canGoLeft([X, Y], _, Obstacles, Wall),
+		next([X, Y], Ladder, Obstacles, Wall, [X, Yout]) :-
+			canGoLeft([X, Y], Ladder, Obstacles, Wall),
 			Yout is Y-1. 
 			
 			% Para Baixo
@@ -116,9 +116,7 @@
 			% Para Cima
 		next([X, Y], Ladder, _, Wall, [Xout, Y]) :-
 			canGoUp([X, Y], Ladder, _, Wall),
-			Xout is X+1. 
-		
-		
+			Xout is X+1. 		
 		
 		solution_bl(Initial, Ladder, Obstacles, Wall, Goal, Solution) :-
 		bl([[Initial]], Ladder, Obstacles, Wall, Goal, Solution). 		

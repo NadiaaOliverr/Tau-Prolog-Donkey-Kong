@@ -8,15 +8,15 @@ export default class Draw {
         Draw.setPositionAnimate();
 
         //Componentes aleatorios        
-        Draw.positionWall   = randoms.positionWall;
+        Draw.positionWall = randoms.positionWall;
         Draw.positionBarrel = randoms.positionBarrel;
         Draw.positionLadder = randoms.positionLadder;
         Draw.positionHammer = randoms.positionHammer;
     }
 
-    static setPositionAnimate(){
+    static setPositionAnimate() {
         Draw.positionAnimate = {
-            x:  Draw.positionMario.y * 90,
+            x: Draw.positionMario.y * 90,
             y: (384 - 96 * Draw.positionMario.x) + 15
         };
     }
@@ -37,7 +37,7 @@ export default class Draw {
 
     static drawMario() {
         let box = document.getElementById(`${Draw.positionMario.x} ${Draw.positionMario.y}`);
-        if (box.children.length == 0) {
+        if (box != null && box.children.length == 0) {
             let img = document.createElement('img');
             img.setAttribute('src', 'img/mario.png');
             img.setAttribute('class', 'imgBox');
@@ -47,7 +47,7 @@ export default class Draw {
 
     static drawPrincess() {
         let box = document.getElementById(`${Draw.positionPrincess.x} ${Draw.positionPrincess.y}`);
-        if (box.children.length == 0) {
+        if (box != null && box.children.length == 0) {
             let img = document.createElement('img');
             img.setAttribute('src', 'img/peach.gif');
             img.setAttribute('class', 'imgBox');
@@ -56,8 +56,8 @@ export default class Draw {
     }
 
     static drawDonkey() {
-        let box = document.getElementById(`${Draw.positionDonkey.x} ${Draw.positionDonkey.y}`);
-        if (box.children.length == 0) {
+        let box = document.getElementById(`${Draw.positionDonkey.x} ${Draw.positionDonkey.y}`);    
+        if (box != null && box.children.length == 0) {
             let img = document.createElement('img');
             img.setAttribute('src', 'img/donkey.gif');
             img.setAttribute('class', 'imgBox');
@@ -68,7 +68,7 @@ export default class Draw {
     static drawLadder() {
         for (let i = 0; i < Draw.positionLadder.length; i++) {
             let box = document.getElementById(`${Draw.positionLadder[i].x} ${Draw.positionLadder[i].y}`);
-            if (box.children.length == 0) {
+            if (box != null && box.children.length == 0) {
                 let img = document.createElement('img');
                 img.setAttribute('src', 'img/ladder.png');
                 img.setAttribute('class', 'ladder');
@@ -79,7 +79,7 @@ export default class Draw {
 
     static drawHammer() {
         let box = document.getElementById(`${Draw.positionHammer.x} ${Draw.positionHammer.y}`);
-        if (box.children.length == 0) {
+        if (box != null && box.children.length == 0) {
             let img = document.createElement('img');
             img.setAttribute('src', 'img/hammer.png');
             img.setAttribute('class', 'imgBox');
@@ -90,7 +90,7 @@ export default class Draw {
     static drawBarrel() {
         for (let i = 0; i < Draw.positionBarrel.length; i++) {
             let box = document.getElementById(`${Draw.positionBarrel[i].x} ${Draw.positionBarrel[i].y}`);
-            if (box.children.length == 0) {
+            if (box != null && box.children.length == 0) {
                 let img = document.createElement('img');
                 img.setAttribute('src', 'img/barrel.png');
                 img.setAttribute('class', 'imgBox');
@@ -102,7 +102,7 @@ export default class Draw {
     static drawWall() {
         for (let i = 0; i < Draw.positionWall.length; i++) {
             let box = document.getElementById(`${Draw.positionWall[i].x} ${Draw.positionWall[i].y}`);
-            if (box.children.length == 0) {
+            if (box != null && box.children.length == 0) {
                 let img = document.createElement('img');
                 img.setAttribute('src', 'img/wall.png');
                 img.setAttribute('class', 'wall');
@@ -121,7 +121,7 @@ export default class Draw {
         animate.append(img);
         edge.append(animate);
         animate.style.marginLeft = Draw.positionAnimate.x + "px";
-        animate.style.marginTop  = Draw.positionAnimate.y + "px";
+        animate.style.marginTop = Draw.positionAnimate.y + "px";
     }
 
     static resetMap() {
@@ -174,10 +174,14 @@ export default class Draw {
 
     static victory() {
         document.getElementById('win').play();
-        let oldPricess = document.getElementById(`${Draw.positionPrincess.x} ${Draw.positionPrincess.y}`);
-        oldPricess.children[0].setAttribute('src', 'img/win.png');
+        let oldPricess = document.getElementById(`${Draw.positionPrincess.x} ${Draw.positionPrincess.y}`);        
         let oldDonkey = document.getElementById(`${Draw.positionDonkey.x} ${Draw.positionDonkey.y}`);
-        oldDonkey.children[0].setAttribute('src', 'img/donkey_sleep.png');
+        if(oldDonkey != null){
+            oldDonkey.children[0].setAttribute('src', 'img/donkey_sleep.png');
+        }
+        if(oldPricess != null){
+            oldPricess.children[0].setAttribute('src', 'img/win.png');
+        }        
     }
 
     static convertLadder() {
@@ -188,12 +192,13 @@ export default class Draw {
         );
     }
 
-    static convertBarrel() {
-        return JSON.stringify(
-            Draw.positionBarrel.map(function (item) {
-                return [item.x, item.y];
-            })
-        );
+    static convertObstacles() {
+        let response = Draw.positionBarrel.map(function (item) {
+            return [item.x, item.y];
+        });
+        response.push([Draw.positionDonkey.x, Draw.positionDonkey.y]);
+
+        return JSON.stringify(response);
     }
 
     static convertWall() {
@@ -230,7 +235,7 @@ export default class Draw {
                 return 'l';
             case 'img/mario.png':
                 return 'm';
-            case 'img/donkey_kong.webp':
+            case 'img/donkey.gif':
                 return 'd';
             case 'img/win.png':
                 return 'p';
@@ -326,7 +331,6 @@ export default class Draw {
                     alert("Essa opção não existe");
                     break;
             }
-            console.log(newContent);
         }
     }
 
@@ -352,7 +356,7 @@ export default class Draw {
                 Draw.positionMario = { x: -10, y: -10 };
                 break;
             case 'd':
-                Draw.positionDonkey = { x: -1, y: -1 };
+                Draw.positionDonkey = { x: -10, y: -10 };
                 break;
             default:
                 break;

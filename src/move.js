@@ -3,7 +3,6 @@ export default class Move {
     constructor(positionAnimate) {
         this.srcMario = 'mario';
         Move.positionAnimate =  positionAnimate;
-        console.log(Move.positionAnimate)
     }
 
     setSrcMario() {
