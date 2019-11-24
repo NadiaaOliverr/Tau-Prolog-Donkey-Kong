@@ -192,13 +192,12 @@ export default class Draw {
         );
     }
 
-    static convertObstacles() {
-        let response = Draw.positionBarrel.map(function (item) {
-            return [item.x, item.y];
-        });
-        response.push([Draw.positionDonkey.x, Draw.positionDonkey.y]);
-
-        return JSON.stringify(response);
+    static convertBarrel() {
+        return JSON.stringify(
+            Draw.positionBarrel.map(function (item) {
+                return [item.x, item.y];
+            })
+        );
     }
 
     static convertWall() {

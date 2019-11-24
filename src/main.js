@@ -79,11 +79,15 @@ function generatePath() {
     var session = pl.create();
     session.consult("prolog.pl");
 
+    console.log(`main([${Draw.positionMario.x},${Draw.positionMario.y}],${Draw.convertLadder()},${Draw.convertBarrel()},${Draw.convertWall()},[${Draw.positionDonkey.x},${Draw.positionDonkey.y}],[${Draw.positionHammer.x},${Draw.positionHammer.y}],[${Draw.positionPrincess.x},${Draw.positionPrincess.y}],Solucao).`);
+
     session.query(
-        `main([${Draw.positionMario.x},${Draw.positionMario.y}], 
+        `main(
+        [${Draw.positionMario.x},${Draw.positionMario.y}],
         ${Draw.convertLadder()}, 
-        ${Draw.convertObstacles()},
+        ${Draw.convertBarrel()},
         ${Draw.convertWall()},
+        [${Draw.positionDonkey.x},${Draw.positionDonkey.y}],
         [${Draw.positionHammer.x},${Draw.positionHammer.y}],
         [${Draw.positionPrincess.x},${Draw.positionPrincess.y}], 
         Solucao).`
@@ -91,6 +95,7 @@ function generatePath() {
 
     var callback = function (response) {        
         let str = response.toString().replace('Solucao/', '"path":');
+        console.log(str);
         path = (JSON.parse(str)).path;
     }
     session.answer(callback);    
