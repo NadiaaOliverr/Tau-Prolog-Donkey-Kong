@@ -94,14 +94,12 @@ function generatePath() {
     );
 
     var callback = function (response) {        
-        let str = response.toString().replace('Solucao/', '"path":');
-        console.log(str);
+        let str = response.toString().replace('Solucao/', '"path":');        
         path = (JSON.parse(str)).path;
     }
     session.answer(callback);    
 
     if(path){
-        path.reverse();
         document.getElementById('start').play();
         run();    
     }else{

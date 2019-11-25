@@ -144,7 +144,8 @@
 		main(InitialState, Ladder, Obstacles, Wall, Donkey, Hammer, Goal, Solution) :- 
 			solution_bl(InitialState, Ladder, Obstacles, Wall, Donkey, 0, Hammer, PathHammer),
 			solution_bl(Hammer, Ladder, Obstacles, Wall, Donkey, 1, Goal, PathGoal),
-			append( PathGoal, PathHammer, Solution).
+			append( PathGoal, PathHammer, SolutionTemp),
+			reverse(SolutionTemp,Solution).
 
 	</script>
 
