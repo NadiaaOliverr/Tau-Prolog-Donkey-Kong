@@ -64,88 +64,88 @@
 
 	<script id="prolog.pl" type="text/prolog" src="prolog.pl">
 		:-use_module(library(lists)). 
-		
+
 		consecutiveObstaclesRight([X, Y], Ladder, Obstacles, Donkey) :-
-		Yone is Y+1,
-		member([X, Y], Obstacles),
-		(member([X, Yone], Obstacles);member([X, Yone], Ladder);[X,Yone]==Donkey).
-	
-	consecutiveObstaclesLeft([X, Y], Ladder, Obstacles, Donkey) :-
-		Yone is Y-1,
-		member([X, Y], Obstacles),
-		(member([X, Yone], Obstacles);member([X, Yone], Ladder);[X,Yone]==Donkey).
+			Yone is Y+1,
+			member([X, Y], Obstacles),
+			(member([X, Yone], Obstacles);member([X, Yone], Ladder);[X,Yone]==Donkey).
 		
-	canGoLeft([X, Y], Ladder, Obstacles, Wall, Donkey) :-
-		Y>0,
-		\+consecutiveObstaclesLeft([X, Y], Ladder, Obstacles, Donkey),
-		Yone is Y-1,
-		\+(member([X, Yone], Wall)).
-	
-	canGoright([X, Y], Ladder, Obstacles, Wall, Donkey) :-
-		Y<9,
-		\+consecutiveObstaclesRight([X, Y], Ladder, Obstacles, Donkey),
-		Yone is Y+1,
-		\+(member([X, Yone], Wall)).
-	
-	canGoDown([X, Y], Ladder, Obstacles, Wall, Donkey) :-
-		X>0,
-		Xone is X-1,
-		member([Xone, Y], Ladder),
-		\+member([X, Y], Wall),
-		\+member([X, Y], Obstacles),
-		\+([X, Y]==Donkey).
-	
-	canGoUp([X, Y], Ladder, Obstacles, Wall, Donkey) :-
-		member([X, Y], Ladder),
-		X<4,
-		Xone is X+1,
-		\+member([Xone, Y], Wall),
-		\+member([Xone, Y], Obstacles),
-		\+([Xone, Y]==Donkey).
+		consecutiveObstaclesLeft([X, Y], Ladder, Obstacles, Donkey) :-
+			Yone is Y-1,
+			member([X, Y], Obstacles),
+			(member([X, Yone], Obstacles);member([X, Yone], Ladder);[X,Yone]==Donkey).
+			
+		canGoLeft([X, Y], Ladder, Obstacles, Wall, Donkey, HasHamer) :-
+			Y>=0,
+			\+consecutiveObstaclesLeft([X, Y], Ladder, Obstacles, Donkey),
+			\+(member([X, Y], Wall)),
+			\+ ([X,Y]==Donkey,HasHamer==0).
 		
-		% Para direita
-	next([X, Y], Ladder, Obstacles, Wall, Donkey, [X, Yout]) :-
-		canGoright([X, Y], Ladder, Obstacles, Wall, Donkey),
-		Yout is Y+1. 
+		canGoright([X, Y], Ladder, Obstacles, Wall, Donkey, HasHamer) :-
+			Y=<9,
+			\+consecutiveObstaclesRight([X, Y], Ladder, Obstacles, Donkey),
+			\+(member([X, Y], Wall)),
+			\+ ([X,Y]==Donkey,HasHamer==0).
 		
-		% Para esquerda
-	next([X, Y], Ladder, Obstacles, Wall, Donkey, [X, Yout]) :-
-		canGoLeft([X, Y], Ladder, Obstacles, Wall, Donkey),
-		Yout is Y-1. 
+		canGoDown([X, Y], Ladder, Obstacles, _, Donkey) :-
+			X>=0,
+			Xup is X+1,
+			member([X, Y], Ladder),
+			\+member([Xup, Y], Obstacles),
+			\+([Xup, Y]==Donkey).
 		
-		% Para Baixo
-	next([X, Y], Ladder, Obstacles, Wall, Donkey, [Xout, Y]) :-
-		canGoDown([X, Y], Ladder, Obstacles, Wall, Donkey),
-		Xout is X-1. 
+		canGoUp([X, Y], Ladder, Obstacles, Wall, Donkey) :-	
+			X=<4,
+			Xdown is X-1,
+			member([Xdown, Y], Ladder),
+			\+member([X, Y], Wall),
+			\+member([X, Y], Obstacles),
+			\+([X, Y]==Donkey).
+			
+			% Para direita
+		next([X, Y], Ladder, Obstacles, Wall, Donkey, HasHamer, [X, Yout]) :-
+			Yout is Y+1,
+			canGoright([X, Yout], Ladder, Obstacles, Wall, Donkey, HasHamer).
+			
+			% Para esquerda
+		next([X, Y], Ladder, Obstacles, Wall, Donkey, HasHamer, [X, Yout]) :-
+			Yout is Y-1,
+			canGoLeft([X, Yout], Ladder, Obstacles, Wall, Donkey, HasHamer).
+			
+			
+			% Para Baixo
+		next([X, Y], Ladder, Obstacles, Wall, Donkey, _, [Xout, Y]) :-
+			Xout is X-1,
+			canGoDown([Xout, Y], Ladder, Obstacles, Wall, Donkey).
+			
+			% Para Cima
+		next([X, Y], Ladder, Obstacles, Wall, Donkey, _, [Xout, Y]) :-	
+			Xout is X+1,
+			canGoUp([Xout, Y], Ladder, Obstacles, Wall, Donkey).
 		
-		% Para Cima
-	next([X, Y], Ladder, Obstacles, Wall, Donkey, [Xout, Y]) :-
-		canGoUp([X, Y], Ladder, Obstacles, Wall, Donkey),
-		Xout is X+1. 		
-	
-	solution_bl(Initial, Ladder, Obstacles, Wall, Donkey, Goal, Solution) :-
-	bl([[Initial]], Ladder, Obstacles, Wall, Donkey, Goal, Solution). 		
-	
-	bl([[State|Path]|_], _, _, _, _, Goal, [State|Path]) :-
-	Goal==State. 
-	
-	bl([First|Others], Ladder, Obstacles, Wall, Donkey, Goal, Solution) :-
-	extend(First, Successors, Ladder, Obstacles, Wall, Donkey),
-	append(Others, Successors, NewFrontier),
-	bl(NewFrontier, Ladder, Obstacles, Wall, Donkey, Goal, Solution).
-	
-	extend([State|Path], ListSuccessors, Ladder, Obstacles, Wall, Donkey) :-
-	bagof([Sucessor, State|Path],
-		(next(State, Ladder, Obstacles, Wall, Donkey, Sucessor), \+member(Sucessor, [State|Path])),
-		ListSuccessors),
-	!. 
-	extend( _ ,[], _,_,_,_).
-	
-	main(InitialState, Ladder, Obstacles, Wall, Donkey,Hammer, Goal, Solution) :- 
-		solution_bl(InitialState, Ladder, Obstacles, Wall, Donkey, Hammer, PathHammer),
-		solution_bl(Hammer, Ladder, Obstacles, Wall, Donkey, Goal, PathGoal),
-		append( PathGoal, PathHammer, Solution).
-	
+		solution_bl(Initial, Ladder, Obstacles, Wall, Donkey, HasHamer, Goal, Solution) :-
+		bl([[Initial]], Ladder, Obstacles, Wall, Donkey, HasHamer, Goal, Solution). 		
+		
+		bl([[State|Path]|_], _, _, _, _, _, Goal, [State|Path]) :-
+		Goal==State. 
+		
+		bl([First|Others], Ladder, Obstacles, Wall, Donkey, HasHamer, Goal, Solution) :-
+		extend(First, Successors, Ladder, Obstacles, Wall, Donkey, HasHamer),
+		append(Others, Successors, NewFrontier),
+		bl(NewFrontier, Ladder, Obstacles, Wall, Donkey, HasHamer, Goal, Solution).
+		
+		extend([State|Path], ListSuccessors, Ladder, Obstacles, Wall, Donkey, HasHamer) :-
+		bagof([Sucessor, State|Path],
+			(next(State, Ladder, Obstacles, Wall, Donkey, HasHamer, Sucessor), \+member(Sucessor, [State|Path])),
+			ListSuccessors),
+		!. 
+		extend( _ ,[], _,_,_,_,_).
+		
+		main(InitialState, Ladder, Obstacles, Wall, Donkey, Hammer, Goal, Solution) :- 
+			solution_bl(InitialState, Ladder, Obstacles, Wall, Donkey, 0, Hammer, PathHammer),
+			solution_bl(Hammer, Ladder, Obstacles, Wall, Donkey, 1, Goal, PathGoal),
+			append( PathGoal, PathHammer, Solution).
+
 	</script>
 
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
