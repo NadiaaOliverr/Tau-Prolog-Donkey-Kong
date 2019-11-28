@@ -22,9 +22,9 @@ Abra no navegador o arquivo ```index.html``` e divirta-se! Para modificações n
         - Abra o arquivo index.html
 ```
 
-## Contribuidores
- [<img src="https://avatars1.githubusercontent.com/u/51803882?s=460&v=4" width="100px;"/><br /><sub><b>Genilton Barbosa</b></sub>](https://github.com/genilton2528)<br />|[<img src="https://avatars0.githubusercontent.com/u/41811634?s=460&v=4" width="100px;"/><br/><sub><b>Nádia Oliveira</b></sub>](https://github.com/NadiaOliver)<br />
---------- | ------
+### Contribuidores
 
+[@nadiaaoliverr](https://github.com/NadiaaOliverr)  
+[@genilton2528](https://github.com/genilton2528)
 
 **Tem alguma sugestão de melhoria ou encontrou algum bug? Conta pra gente, deixe sua issue** :wink:
