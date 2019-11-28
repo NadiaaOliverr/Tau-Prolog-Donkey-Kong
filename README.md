@@ -15,7 +15,7 @@ Abra no navegador o arquivo ```index.html``` e divirta-se!
 
 
 
-```javascript
+```shell
 
  // Modificando arquivo javaScript
 
