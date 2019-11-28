@@ -19,6 +19,8 @@ Abra no navegador o arquivo ```index.html``` e divirta-se!
 
  // Modificando arquivo javaScript
 
+        - Instale o yarn em sua máquina
+        - Abra o terminal na pasta do projeto
         - Digite: yarn install
         - Faça sua modificação no js
         - Digite: yarn build
