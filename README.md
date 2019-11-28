@@ -11,14 +11,9 @@ Para a codificação deste projeto utilizou-se a linguagem Java Script e o frame
 
 
 ## Como executar ?
-Abra no navegador o arquivo ```index.html``` e divirta-se!
+Abra no navegador o arquivo ```index.html``` e divirta-se! Para modificações no arquivo JavaScript siga os passos abaixo:
 
-
-
-```shell
-
- // Modificando arquivo javaScript
-
+```
         - Instale o yarn em sua máquina
         - Abra o terminal na pasta do projeto
         - Digite: yarn install
